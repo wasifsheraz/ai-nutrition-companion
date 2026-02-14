@@ -258,18 +258,18 @@ export default function Onboarding() {
                 <div className="grid grid-cols-3 gap-2.5">
                   {genderOptions.map((g) =>
                 <motion.button key={g.label} whileTap={{ scale: 0.95 }} onClick={() => setGender(g.label)}
-                className={`glass-card text-center py-3.5 px-2 transition-all relative overflow-hidden ${gender === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
+                className={`glass-card text-center py-2 px-1.5 transition-all relative overflow-hidden ${gender === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
                       {gender === g.label &&
                   <motion.div layoutId="gender-glow" className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
                   }
                       <div className="relative z-10">
-                        <div className="icon-box-sm mx-auto mb-2">
-                          <g.icon size={20} className={gender === g.label ? "text-primary" : "text-muted-foreground"} strokeWidth={1.5} />
+                        <div className="w-8 h-8 rounded-lg bg-muted/50 border border-border flex items-center justify-center mx-auto mb-1.5">
+                          <g.icon size={16} className={gender === g.label ? "text-primary" : "text-muted-foreground"} strokeWidth={1.5} />
                         </div>
-                        <div className="text-sm font-bold text-foreground">{g.label}</div>
+                        <div className="text-xs font-bold text-foreground">{g.label}</div>
                         {gender === g.label &&
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-5 h-5 bg-primary rounded-full flex items-center justify-center mx-auto mt-2">
-                            <Check size={12} className="text-primary-foreground" strokeWidth={2.5} />
+                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-4 h-4 bg-primary rounded-full flex items-center justify-center mx-auto mt-1">
+                            <Check size={10} className="text-primary-foreground" strokeWidth={2.5} />
                           </motion.div>
                     }
                       </div>
