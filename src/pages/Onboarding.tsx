@@ -313,7 +313,7 @@ export default function Onboarding() {
               </div>
 
               {/* BMI Display */}
-              <motion.div layout className="glass-card-static p-6 text-center relative overflow-hidden">
+              <motion.div layout className="glass-card-static p-6 text-center relative overflow-hidden px-[7px] py-[7px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] to-transparent pointer-events-none" />
                 <div className="relative z-10 space-y-3">
                   <div className="icon-box mx-auto" style={{ background: "rgba(16,185,129,0.1)", borderColor: "rgba(16,185,129,0.2)" }}>
