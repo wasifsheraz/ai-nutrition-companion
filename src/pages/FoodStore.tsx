@@ -99,9 +99,13 @@ export default function FoodStore() {
   const addMore = (id: string) => {
     setItems(prev => prev.map(i => {
       if (i.id !== id) return i;
-      const match = i.qty.match(/^(\d+)/);
-      if (match) { const n = parseInt(match[1]) + 1; return { ...i, qty: i.qty.replace(/^\d+/, String(n)) }; }
-      return { ...i, qty: i.qty };
+      // Handle ×6 format
+      const timesMatch = i.qty.match(/^×(\d+)/);
+      if (timesMatch) { return { ...i, qty: `×${parseInt(timesMatch[1]) + 1}` }; }
+      // Handle "4 pieces", "1 bunch", "2kg", "1L", "500g", "50g", "200ml" etc.
+      const numMatch = i.qty.match(/^(\d+)(.*)/);
+      if (numMatch) { return { ...i, qty: `${parseInt(numMatch[1]) + 1}${numMatch[2]}` }; }
+      return i;
     }));
   };
 
