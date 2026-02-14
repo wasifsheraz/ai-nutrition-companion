@@ -229,24 +229,24 @@ export default function Onboarding() {
                 <p className="text-sm text-muted-foreground mt-1">Tell us a bit about yourself</p>
               </div>
 
-              <div className="glass-card-static p-5 space-y-5">
+              <div className="glass-card-static p-4 space-y-4">
                 <div>
                   <label className="text-xs text-muted-foreground mb-2 block font-semibold uppercase tracking-wider">Your Name</label>
                   <input value={name} onChange={e => setName(e.target.value)} className="input-glass w-full text-base" placeholder="What should we call you?" />
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-3 block font-semibold uppercase tracking-wider">Age</label>
-                  <div className="flex items-center gap-4 justify-center">
+                  <div className="flex items-center gap-3 justify-center">
                     <motion.button whileTap={{ scale: 0.85 }} onClick={() => setAge(Math.max(10, age - 1))}
-                      className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-xl text-foreground font-bold hover:bg-white/[0.06] transition-colors">
+                      className="w-11 h-11 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-lg text-foreground font-bold hover:bg-white/[0.06] transition-colors">
                       −
                     </motion.button>
                     <motion.span key={age} initial={{ scale: 1.2 }} animate={{ scale: 1 }}
-                      className="text-5xl font-bold text-foreground w-24 text-center font-display gradient-text">
+                      className="text-4xl font-bold text-foreground w-20 text-center font-display gradient-text">
                       {age}
                     </motion.span>
                     <motion.button whileTap={{ scale: 0.85 }} onClick={() => setAge(Math.min(100, age + 1))}
-                      className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-xl text-foreground font-bold hover:bg-white/[0.06] transition-colors">
+                      className="w-11 h-11 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-lg text-foreground font-bold hover:bg-white/[0.06] transition-colors">
                       +
                     </motion.button>
                   </div>
@@ -255,10 +255,10 @@ export default function Onboarding() {
 
               <div>
                 <label className="text-xs text-muted-foreground mb-3 block font-semibold uppercase tracking-wider">Gender</label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2.5">
                   {genderOptions.map(g => (
                     <motion.button key={g.label} whileTap={{ scale: 0.95 }} onClick={() => setGender(g.label)}
-                      className={`glass-card text-center py-5 px-3 transition-all relative overflow-hidden ${gender === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
+                      className={`glass-card text-center py-3.5 px-2 transition-all relative overflow-hidden ${gender === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
                       {gender === g.label && (
                         <motion.div layoutId="gender-glow" className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
                       )}
@@ -357,7 +357,7 @@ export default function Onboarding() {
                       transition={{ delay: i * 0.08 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setActivity(a.label)}
-                      className={`glass-card w-full flex items-center gap-4 py-4 px-5 text-left transition-all relative overflow-hidden ${activity === a.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}
+                      className={`glass-card w-full flex items-center gap-3 py-3 px-4 text-left transition-all relative overflow-hidden ${activity === a.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}
                     >
                       {activity === a.label && <motion.div layoutId="activity-glow" className="absolute inset-0 bg-gradient-to-r from-primary/[0.06] to-transparent" />}
                       <div className={`icon-box-sm relative z-10 ${activity === a.label ? "" : ""}`}
@@ -380,10 +380,10 @@ export default function Onboarding() {
 
               <div>
                 <label className="text-xs text-muted-foreground mb-3 block font-semibold uppercase tracking-wider">Health Goal</label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2.5">
                   {healthGoals.map(g => (
                     <motion.button key={g.label} whileTap={{ scale: 0.95 }} onClick={() => setGoal(g.label)}
-                      className={`glass-card text-center py-5 px-3 transition-all relative overflow-hidden ${goal === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
+                      className={`glass-card text-center py-3.5 px-2 transition-all relative overflow-hidden ${goal === g.label ? "border-primary/30 bg-primary/[0.06]" : ""}`}>
                       {goal === g.label && <motion.div layoutId="goal-glow" className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />}
                       <div className="relative z-10">
                         <div className="icon-box-sm mx-auto mb-2" style={goal === g.label ? { background: "rgba(16,185,129,0.12)", borderColor: "rgba(16,185,129,0.2)" } : {}}>
@@ -407,7 +407,7 @@ export default function Onboarding() {
                 <p className="text-sm text-muted-foreground mt-1">Help us personalize your meals</p>
               </div>
 
-              <div className="glass-card-static p-5 space-y-5">
+              <div className="glass-card-static p-4 space-y-4">
                 <div>
                   <label className="text-xs text-muted-foreground mb-3 block font-semibold uppercase tracking-wider">Food Allergies</label>
                   <div className="flex flex-wrap gap-2.5">
@@ -456,7 +456,7 @@ export default function Onboarding() {
                 <h2 className="text-2xl lg:text-3xl font-display font-bold text-foreground">Favorite cuisines</h2>
                 <p className="text-sm text-muted-foreground mt-1">Pick as many as you like</p>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2.5">
                 {cuisines.map((c, i) => {
                   const CIcon = cuisineIcons[c] || Globe;
                   const selected = selectedCuisines.includes(c);
@@ -468,7 +468,7 @@ export default function Onboarding() {
                       transition={{ delay: i * 0.04 }}
                       whileTap={{ scale: 0.93 }}
                       onClick={() => toggleItem(selectedCuisines, c, setSelectedCuisines)}
-                      className={`glass-card text-center py-5 px-2 transition-all relative overflow-hidden ${selected ? "border-primary/30 bg-primary/[0.06]" : ""}`}
+                      className={`glass-card text-center py-3.5 px-2 transition-all relative overflow-hidden ${selected ? "border-primary/30 bg-primary/[0.06]" : ""}`}
                     >
                       {selected && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] to-transparent" />}
                       <div className="relative z-10">
