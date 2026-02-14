@@ -171,8 +171,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How It Works — single row with scroll reveal */}
-      <section id="how-it-works" className="px-6 py-20 lg:py-28 max-w-6xl mx-auto">
+      {/* How It Works — vertical timeline */}
+      <section id="how-it-works" className="px-6 py-20 lg:py-28 max-w-3xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -181,26 +181,49 @@ export default function Landing() {
         >
           How It Works
         </motion.h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-10">
-          {steps.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.2, duration: 0.6, ease: "easeOut" as const }}
-              className="text-center space-y-4"
-            >
-              <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-xl lg:text-2xl font-bold text-foreground mx-auto shadow-lg shadow-primary/25">
-                {s.num}
-              </div>
-              <div className="icon-box mx-auto">
-                <s.icon size={22} className="text-primary" strokeWidth={1.5} />
-              </div>
-              <p className="text-sm lg:text-base font-semibold text-foreground leading-tight">{s.title}</p>
-              <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </motion.div>
-          ))}
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-primary/40 via-secondary/30 to-transparent" />
+
+          <div className="space-y-8 lg:space-y-10">
+            {steps.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" as const }}
+                className="relative flex gap-5 lg:gap-7"
+              >
+                {/* Step number on the line */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300, damping: 20 }}
+                  className="relative z-10 shrink-0 w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-lg lg:text-xl font-bold text-primary-foreground shadow-lg"
+                  style={{ boxShadow: "0 4px 24px rgba(16,185,129,0.3)" }}
+                >
+                  {s.num}
+                </motion.div>
+
+                {/* Content card */}
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  transition={{ duration: 0.25 }}
+                  className="glass-card flex-1 p-5 lg:p-7 space-y-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="icon-box-sm" style={{ background: "rgba(16,185,129,0.1)", borderColor: "rgba(16,185,129,0.2)" }}>
+                      <s.icon size={18} className="text-primary" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-base lg:text-lg font-bold text-foreground">{s.title}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
