@@ -1,16 +1,16 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Camera, Box, CalendarDays, BarChart3, User } from "lucide-react";
+import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Home" },
-  { to: "/snap", icon: Camera, label: "Snap" },
-  { to: "/food-store", icon: Box, label: "Store" },
+  { to: "/snap", icon: ScanLine, label: "Snap" },
+  { to: "/food-store", icon: Warehouse, label: "Store" },
   { to: "/meal-plan", icon: CalendarDays, label: "Plan" },
   { to: "/nutrients-report", icon: BarChart3, label: "Report" },
 ];
 
-const sidebarItems = [...navItems, { to: "/profile", icon: User, label: "Profile" }];
+const sidebarItems = [...navItems, { to: "/profile", icon: UserCircle, label: "Profile" }];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -18,15 +18,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[72px] fixed left-0 top-0 h-full z-40 items-center py-6 gap-1 border-r border-white/[0.06] bg-background/80 backdrop-blur-2xl">
-        <div className="gradient-text font-display font-bold text-xl mb-6">N</div>
+      <aside className="hidden lg:flex flex-col w-[80px] fixed left-0 top-0 h-full z-40 items-center py-8 gap-2 border-r border-white/[0.06] bg-background/80 backdrop-blur-2xl">
+        <div className="gradient-text font-display font-bold text-2xl mb-8">N</div>
         {sidebarItems.map((item) => {
           const active = location.pathname === item.to;
           return (
             <NavLink
               key={item.to}
               to={item.to}
-              className={`flex flex-col items-center gap-0.5 p-2.5 rounded-xl transition-all duration-300 w-14 relative ${
+              className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-300 w-16 relative ${
                 active
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
@@ -39,18 +39,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <item.icon size={20} className="relative z-10" />
-              <span className="text-[9px] font-medium relative z-10">{item.label}</span>
+              <item.icon size={22} className="relative z-10" />
+              <span className="text-[10px] font-semibold relative z-10">{item.label}</span>
             </NavLink>
           );
         })}
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-[72px] pb-[88px] lg:pb-6">
+      <main className="flex-1 lg:ml-[80px] pb-[92px] lg:pb-8">
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
@@ -60,26 +60,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Bottom Nav */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] bg-background/80 backdrop-blur-2xl">
-        <div className="flex justify-around items-center px-2 py-1 safe-area-bottom">
+        <div className="flex justify-around items-center px-2 py-2 safe-area-bottom">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={`flex flex-col items-center gap-0.5 py-2 px-3 rounded-2xl transition-all duration-300 relative min-w-[52px] ${
+                className={`flex flex-col items-center gap-1 py-2.5 px-4 rounded-2xl transition-all duration-300 relative min-w-[56px] ${
                   active ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {active && (
                   <motion.div
                     layoutId="nav-pill"
-                    className="absolute -top-1 w-8 h-1 rounded-full bg-primary"
+                    className="absolute -top-1 w-10 h-1 rounded-full bg-primary"
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
-                <item.icon size={22} strokeWidth={active ? 2.5 : 1.8} />
-                <span className="text-[10px] font-semibold">{item.label}</span>
+                <item.icon size={24} strokeWidth={active ? 2.5 : 1.8} />
+                <span className="text-[11px] font-semibold">{item.label}</span>
               </NavLink>
             );
           })}

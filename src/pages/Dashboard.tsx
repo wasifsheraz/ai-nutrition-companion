@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
-import { Camera, Box, Flame, CalendarDays, Plus, Star, Brain, ChevronRight } from "lucide-react";
+import { Camera, Warehouse, Flame, CalendarDays, Plus, Star, BrainCircuit, ChevronRight, UtensilsCrossed, ScanLine, Clock, Sparkles } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
@@ -24,8 +24,8 @@ function CountUp({ target, duration = 1500 }: { target: number; duration?: numbe
   return <span className="stat-number">{val.toLocaleString()}</span>;
 }
 
-function AnimatedRing({ percent, size = 180 }: { percent: number; size?: number }) {
-  const strokeWidth = 10;
+function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number }) {
+  const strokeWidth = 12;
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
   return (
@@ -49,15 +49,15 @@ function AnimatedRing({ percent, size = 180 }: { percent: number; size?: number 
   );
 }
 
-function MacroBar({ label, current, target, color }: { label: string; current: number; target: number; color: string }) {
+function MacroBar({ label, icon: Icon, current, target, color }: { label: string; icon: React.ElementType; current: number; target: number; color: string }) {
   const pct = Math.min((current / target) * 100, 100);
   return (
-    <div className="space-y-1.5">
-      <div className="flex justify-between text-xs">
-        <span className="text-muted-foreground">{label}</span>
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm">
+        <span className="text-muted-foreground flex items-center gap-1.5"><Icon size={14} />{label}</span>
         <span className="text-foreground font-semibold">{current}g / {target}g</span>
       </div>
-      <div className="h-2.5 rounded-full bg-white/[0.04] overflow-hidden">
+      <div className="h-3 rounded-full bg-white/[0.04] overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${color}`}
           initial={{ width: 0 }}
@@ -70,17 +70,17 @@ function MacroBar({ label, current, target, color }: { label: string; current: n
 }
 
 const meals = [
-  { time: "8:30 AM", emoji: "🥣", name: "Oatmeal with Banana", cal: 320, protein: 12, rated: true, stars: 5 },
-  { time: "1:00 PM", emoji: "🍗", name: "Chicken Karahi with Rice", cal: 520, protein: 38, rated: true, stars: 4 },
-  { time: "4:00 PM", emoji: "🍌", name: "Banana + Almonds", cal: 180, protein: 6, rated: false },
-  { time: "7:00 PM", emoji: "🕐", name: "Dinner not logged yet", cal: 0, protein: 0, pending: true },
+  { time: "8:30 AM", icon: UtensilsCrossed, name: "Oatmeal with Banana", cal: 320, protein: 12, rated: true, stars: 5 },
+  { time: "1:00 PM", icon: Flame, name: "Chicken Karahi with Rice", cal: 520, protein: 38, rated: true, stars: 4 },
+  { time: "4:00 PM", icon: UtensilsCrossed, name: "Banana + Almonds", cal: 180, protein: 6, rated: false },
+  { time: "7:00 PM", icon: Clock, name: "Dinner not logged yet", cal: 0, protein: 0, pending: true },
 ];
 
 const quickActions = [
-  { emoji: "📸", title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/10 to-teal-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]" },
-  { emoji: "🧊", title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/10 to-cyan-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.15)]" },
-  { emoji: "🍳", title: "Cook Now", sub: "4 recipes from fridge", to: "/cook", gradient: "from-amber-500/10 to-orange-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]" },
-  { emoji: "📅", title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/10 to-pink-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.15)]" },
+  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/10 to-teal-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]" },
+  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/10 to-cyan-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.15)]" },
+  { icon: UtensilsCrossed, title: "Cook Now", sub: "4 recipes from fridge", to: "/cook", gradient: "from-amber-500/10 to-orange-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]" },
+  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/10 to-pink-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.15)]" },
 ];
 
 export default function Dashboard() {
@@ -90,116 +90,123 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="px-5 py-6 lg:p-10 max-w-lg lg:max-w-4xl mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+      <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-6xl mx-auto">
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7 lg:space-y-10">
           {/* Header */}
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-display font-bold text-foreground">{greeting}, Ahmed 👋</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">Let's check your nutrition today</p>
+              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">{greeting}, Ahmed</h1>
+              <p className="text-sm text-muted-foreground mt-1">Let's check your nutrition today</p>
             </div>
-            <Link to="/profile" className="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-sm font-bold text-foreground shadow-lg shadow-primary/20">
+            <Link to="/profile" className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base font-bold text-foreground shadow-lg shadow-primary/20">
               A
             </Link>
           </motion.div>
 
-          {/* Progress Card */}
-          <motion.div variants={fadeUp} className="glass-card-static p-5 space-y-5">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Today's Progress</h2>
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                <AnimatedRing percent={1120 / 1800} />
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold text-foreground stat-number"><CountUp target={1120} /></span>
-                  <span className="text-xs text-muted-foreground mt-0.5">/ 1,800 cal</span>
-                </div>
-              </div>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="text-sm text-primary font-semibold mt-3"
-              >
-                680 remaining
-              </motion.p>
-            </div>
-            <div className="space-y-3">
-              <MacroBar label="💪 Protein" current={78} target={90} color="bg-primary" />
-              <MacroBar label="🌾 Carbs" current={145} target={200} color="bg-teal-400" />
-              <MacroBar label="🧈 Fat" current={42} target={60} color="bg-cyan-400" />
-            </div>
-          </motion.div>
-
-          {/* Meals */}
-          <motion.div variants={fadeUp} className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-display font-semibold text-foreground">Today's Meals</h2>
-              <button className="btn-ghost text-xs flex items-center gap-1"><Plus size={14} /> Add</button>
-            </div>
-            <div className="relative pl-5 space-y-3">
-              <div className="absolute left-[7px] top-3 bottom-3 w-[2px] rounded-full bg-gradient-to-b from-primary/60 to-teal-400/20" />
-              {meals.map((m, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
-                  className="glass-card flex items-center gap-3 py-3 px-4"
-                >
-                  <div className="absolute -left-[5px] w-3 h-3 rounded-full bg-primary border-2 border-background shadow-sm shadow-primary/30" />
-                  <span className="text-2xl">{m.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{m.name}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {m.time} {m.cal > 0 && `· ${m.cal} cal · ${m.protein}g protein`}
-                    </p>
+          {/* Desktop: Progress + Meals side by side */}
+          <div className="lg:grid lg:grid-cols-2 lg:gap-8 space-y-6 lg:space-y-0">
+            {/* Progress Card */}
+            <motion.div variants={fadeUp} className="glass-card-static p-6 lg:p-8 space-y-6">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Today's Progress</h2>
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <AnimatedRing percent={1120 / 1800} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-4xl lg:text-5xl font-bold text-foreground stat-number"><CountUp target={1120} /></span>
+                    <span className="text-sm text-muted-foreground mt-1">/ 1,800 cal</span>
                   </div>
-                  {m.rated && (
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: m.stars || 0 }).map((_, j) => (
-                        <Star key={j} size={10} className="fill-amber-400 text-amber-400" />
-                      ))}
+                </div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  className="text-base text-primary font-semibold mt-4"
+                >
+                  680 remaining
+                </motion.p>
+              </div>
+              <div className="space-y-4">
+                <MacroBar label="Protein" icon={Flame} current={78} target={90} color="bg-primary" />
+                <MacroBar label="Carbs" icon={Sparkles} current={145} target={200} color="bg-teal-400" />
+                <MacroBar label="Fat" icon={Flame} current={42} target={60} color="bg-cyan-400" />
+              </div>
+            </motion.div>
+
+            {/* Meals */}
+            <motion.div variants={fadeUp} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-display font-semibold text-foreground">Today's Meals</h2>
+                <button className="btn-ghost text-sm flex items-center gap-1.5"><Plus size={16} /> Add</button>
+              </div>
+              <div className="relative pl-6 space-y-3">
+                <div className="absolute left-[9px] top-3 bottom-3 w-[2px] rounded-full bg-gradient-to-b from-primary/60 to-teal-400/20" />
+                {meals.map((m, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
+                    className="glass-card flex items-center gap-4 py-4 px-5"
+                  >
+                    <div className="absolute -left-[5px] w-3.5 h-3.5 rounded-full bg-primary border-2 border-background shadow-sm shadow-primary/30" />
+                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
+                      <m.icon size={20} className="text-muted-foreground" />
                     </div>
-                  )}
-                  {m.pending && (
-                    <button onClick={() => navigate("/snap")} className="chip text-[11px] py-1.5 px-3">+ Log</button>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">{m.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {m.time} {m.cal > 0 && `· ${m.cal} cal · ${m.protein}g protein`}
+                      </p>
+                    </div>
+                    {m.rated && (
+                      <div className="flex gap-0.5">
+                        {Array.from({ length: m.stars || 0 }).map((_, j) => (
+                          <Star key={j} size={12} className="fill-amber-400 text-amber-400" />
+                        ))}
+                      </div>
+                    )}
+                    {m.pending && (
+                      <button onClick={() => navigate("/snap")} className="chip text-xs py-2 px-4">+ Log</button>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
           {/* Quick Actions */}
-          <motion.div variants={fadeUp} className="space-y-3">
-            <h2 className="text-base font-display font-semibold text-foreground">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-3">
+          <motion.div variants={fadeUp} className="space-y-4">
+            <h2 className="text-lg font-display font-semibold text-foreground">Quick Actions</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {quickActions.map((a, i) => (
                 <motion.button
                   key={i}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={{ scale: 1.03, y: -3 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(a.to)}
-                  className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-2 p-4 ${a.glow} transition-shadow duration-500`}
+                  className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}
                 >
-                  <span className="text-3xl block">{a.emoji}</span>
-                  <p className="text-sm font-bold text-foreground">{a.title}</p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">{a.sub}</p>
+                  <div className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center">
+                    <a.icon size={24} className="text-foreground" />
+                  </div>
+                  <p className="text-base font-bold text-foreground">{a.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{a.sub}</p>
                 </motion.button>
               ))}
             </div>
           </motion.div>
 
           {/* AI Insight */}
-          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.06] to-teal-400/[0.04] flex items-start gap-3 p-4">
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <Brain className="text-primary" size={16} />
+          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.06] to-teal-400/[0.04] flex items-start gap-4 p-5 lg:p-6">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <BrainCircuit className="text-primary" size={20} />
             </div>
             <div className="flex-1">
-              <p className="text-sm text-foreground leading-relaxed">
-                Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both. 🧠
+              <p className="text-sm lg:text-base text-foreground leading-relaxed">
+                Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both and fits your calorie budget perfectly.
               </p>
-              <button onClick={() => navigate("/cook")} className="btn-ghost text-xs mt-2 flex items-center gap-1 p-0">
-                Show Recipe <ChevronRight size={14} />
+              <button onClick={() => navigate("/cook")} className="btn-ghost text-sm mt-3 flex items-center gap-1.5 p-0">
+                Show Recipe <ChevronRight size={16} />
               </button>
             </div>
           </motion.div>
