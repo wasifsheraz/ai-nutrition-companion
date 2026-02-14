@@ -59,6 +59,8 @@ const mealPreferences = [
   { label: "High Protein", icon: Dumbbell },
 ];
 
+const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack"];
+
 export default function Cook() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<CookMode>(null);
@@ -69,6 +71,7 @@ export default function Cook() {
   const [prefInput, setPrefInput] = useState("");
   const [searchMsgIdx, setSearchMsgIdx] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [selectedMealType, setSelectedMealType] = useState<string>("Lunch");
 
   const addIngredient = () => {
     const val = inputVal.trim();
@@ -252,6 +255,30 @@ export default function Cook() {
                 transition={{ duration: 0.5 }}
                 className="space-y-6"
               >
+                {/* Meal Type */}
+                <div className="glass-card-static p-6 space-y-4">
+                  <label className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <UtensilsCrossed size={16} className="text-primary" strokeWidth={1.5} />
+                    Meal Type
+                  </label>
+                  <div className="grid grid-cols-4 gap-0 rounded-xl overflow-hidden border border-border">
+                    {mealTypes.map((type) => (
+                      <motion.button
+                        key={type}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedMealType(type)}
+                        className={`py-3 text-sm font-medium transition-all border-r border-border last:border-r-0 ${
+                          selectedMealType === type
+                            ? "bg-primary/20 text-primary"
+                            : "bg-card/40 text-muted-foreground hover:bg-card/80"
+                        }`}
+                      >
+                        {type}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Meal Preference */}
                 <div className="glass-card-static p-6 space-y-4">
                   <label className="text-sm font-bold text-foreground flex items-center gap-2">
