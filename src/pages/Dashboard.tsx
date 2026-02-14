@@ -3,18 +3,18 @@ import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Camera, Warehouse, Flame, CalendarDays, Plus, Star, BrainCircuit, ChevronRight,
-  UtensilsCrossed, ScanLine, Clock, Sparkles, Dumbbell, Droplets, MessageSquare
-} from "lucide-react";
+  UtensilsCrossed, ScanLine, Clock, Sparkles, Dumbbell, Droplets, MessageSquare } from
+"lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import FeedbackModal from "@/components/FeedbackModal";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
 };
 
-function CountUp({ target, duration = 1500 }: { target: number; duration?: number }) {
+function CountUp({ target, duration = 1500 }: {target: number;duration?: number;}) {
   const [val, setVal] = useState(0);
   useEffect(() => {
     const start = Date.now();
@@ -28,7 +28,7 @@ function CountUp({ target, duration = 1500 }: { target: number; duration?: numbe
   return <span className="stat-number">{val.toLocaleString()}</span>;
 }
 
-function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number }) {
+function AnimatedRing({ percent, size = 200 }: {percent: number;size?: number;}) {
   const strokeWidth = 12;
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
@@ -41,20 +41,20 @@ function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number 
         initial={{ strokeDashoffset: circ }}
         animate={{ strokeDashoffset: circ * (1 - percent) }}
         transition={{ duration: 1.8, ease: "easeOut" }}
-        strokeDasharray={circ}
-      />
+        strokeDasharray={circ} />
+
       <defs>
         <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="hsl(160, 84%, 39%)" />
           <stop offset="100%" stopColor="hsl(171, 77%, 50%)" />
         </linearGradient>
       </defs>
-    </svg>
-  );
+    </svg>);
+
 }
 
-function MacroBar({ label, icon: Icon, current, target, color }: { label: string; icon: React.ElementType; current: number; target: number; color: string }) {
-  const pct = Math.min((current / target) * 100, 100);
+function MacroBar({ label, icon: Icon, current, target, color }: {label: string;icon: React.ElementType;current: number;target: number;color: string;}) {
+  const pct = Math.min(current / target * 100, 100);
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
@@ -66,26 +66,26 @@ function MacroBar({ label, icon: Icon, current, target, color }: { label: string
           className={`h-full rounded-full ${color}`}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
-        />
+          transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }} />
+
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 const todayMeals = [
-  { time: "8:30 AM", name: "Oatmeal with Banana", cal: 320, protein: 12, status: "cooked" as const, stars: 5 },
-  { time: "1:00 PM", name: "Chicken Karahi with Rice", cal: 520, protein: 38, status: "cooked" as const, stars: 4 },
-  { time: "4:00 PM", name: "Banana + Almonds", cal: 180, protein: 6, status: "recent" as const },
-  { time: "7:00 PM", name: "Dinner not planned yet", cal: 0, protein: 0, status: "pending" as const },
-];
+{ time: "8:30 AM", name: "Oatmeal with Banana", cal: 320, protein: 12, status: "cooked" as const, stars: 5 },
+{ time: "1:00 PM", name: "Chicken Karahi with Rice", cal: 520, protein: 38, status: "cooked" as const, stars: 4 },
+{ time: "4:00 PM", name: "Banana + Almonds", cal: 180, protein: 6, status: "recent" as const },
+{ time: "7:00 PM", name: "Dinner not planned yet", cal: 0, protein: 0, status: "pending" as const }];
+
 
 const quickActions = [
-  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/8 to-teal-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.12)]" },
-  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/8 to-cyan-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.12)]" },
-  { icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/8 to-orange-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.12)]" },
-  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/8 to-pink-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.12)]" },
-];
+{ icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/8 to-teal-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.12)]" },
+{ icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/8 to-cyan-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.12)]" },
+{ icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/8 to-orange-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.12)]" },
+{ icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/8 to-pink-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.12)]" }];
+
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -146,20 +146,20 @@ export default function Dashboard() {
               <button onClick={() => navigate("/cook")} className="btn-ghost text-sm flex items-center gap-1.5"><Plus size={16} /> Add</button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {todayMeals.map((m, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.08, duration: 0.4 }}
-                  className="glass-card flex items-center gap-4 py-4 px-5"
-                >
+              {todayMeals.map((m, i) =>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.08, duration: 0.4 }}
+                className="glass-card flex items-center gap-4 py-4 px-5">
+
                   <div className="icon-box-sm">
-                    {m.status === "pending" ? (
-                      <Clock size={20} className="text-muted-foreground" strokeWidth={1.5} />
-                    ) : (
-                      <UtensilsCrossed size={20} className="text-primary" strokeWidth={1.5} />
-                    )}
+                    {m.status === "pending" ?
+                  <Clock size={20} className="text-muted-foreground" strokeWidth={1.5} /> :
+
+                  <UtensilsCrossed size={20} className="text-primary" strokeWidth={1.5} />
+                  }
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">{m.name}</p>
@@ -167,27 +167,27 @@ export default function Dashboard() {
                       {m.time} {m.cal > 0 && `· ${m.cal} cal · ${m.protein}g protein`}
                     </p>
                   </div>
-                  {m.status === "cooked" && m.stars && (
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: m.stars }).map((_, j) => (
-                        <Star key={j} size={12} className="fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
+                  {m.status === "cooked" && m.stars &&
+                <div className="flex gap-0.5">
+                      {Array.from({ length: m.stars }).map((_, j) =>
+                  <Star key={j} size={12} className="fill-amber-400 text-amber-400" />
                   )}
-                  {m.status === "recent" && (
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => openFeedback(m.name)}
-                      className="chip text-xs py-2 px-3 flex items-center gap-1"
-                    >
+                    </div>
+                }
+                  {m.status === "recent" &&
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => openFeedback(m.name)}
+                  className="chip text-xs py-2 px-3 flex items-center gap-1">
+
                       <MessageSquare size={12} /> Feedback
                     </motion.button>
-                  )}
-                  {m.status === "pending" && (
-                    <button onClick={() => navigate("/cook")} className="chip text-xs py-2 px-4">+ Plan</button>
-                  )}
+                }
+                  {m.status === "pending" &&
+                <button onClick={() => navigate("/cook")} className="chip text-xs py-2 px-4">+ Plan</button>
+                }
                 </motion.div>
-              ))}
+              )}
             </div>
           </motion.div>
 
@@ -195,42 +195,42 @@ export default function Dashboard() {
           <motion.div variants={fadeUp} className="space-y-4">
             <h2 className="text-lg font-display font-semibold text-foreground">Quick Actions</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {quickActions.map((a, i) => (
-                <motion.button
-                  key={i}
-                  whileHover={{ scale: 1.03, y: -3 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => navigate(a.to)}
-                  className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}
-                >
+              {quickActions.map((a, i) =>
+              <motion.button
+                key={i}
+                whileHover={{ scale: 1.03, y: -3 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate(a.to)}
+                className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}>
+
                   <div className="icon-box">
                     <a.icon size={22} className="text-primary" strokeWidth={1.5} />
                   </div>
                   <p className="text-base font-bold text-foreground">{a.title}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{a.sub}</p>
                 </motion.button>
-              ))}
+              )}
             </div>
           </motion.div>
 
           {/* AI Insight */}
-          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.04] to-teal-400/[0.03] flex items-start gap-4 p-5 lg:p-6">
-            <div className="icon-box">
-              <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm lg:text-base text-foreground leading-relaxed">
-                Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both and fits your calorie budget perfectly.
-              </p>
-              <button onClick={() => navigate("/cook")} className="btn-ghost text-sm mt-3 flex items-center gap-1.5 p-0">
-                Show Recipe <ChevronRight size={16} />
-              </button>
-            </div>
-          </motion.div>
+          
+
+
+
+
+
+
+
+
+
+
+
+
         </motion.div>
       </div>
 
       <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} mealName={feedbackMeal} />
-    </AppLayout>
-  );
+    </AppLayout>);
+
 }
