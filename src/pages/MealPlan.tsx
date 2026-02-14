@@ -65,12 +65,12 @@ const weekPlan: Record<string, {period: string;icon: React.ElementType;name: str
 
 const groceryHave = ["Chicken", "Eggs", "Rice", "Onions", "Lentils"];
 const groceryNeed = [
-{ name: "Yogurt 1L", price: "$2.50" },
-{ name: "Brown Rice 1kg", price: "$3.00" },
-{ name: "Spinach 2 bunches", price: "$1.50" },
-{ name: "Ginger", price: "$0.50" },
-{ name: "Green peppers ×4", price: "$2.00" },
-{ name: "Paratha pack", price: "$3.50" }];
+{ name: "Yogurt", qty: "1L" },
+{ name: "Brown Rice", qty: "1kg" },
+{ name: "Spinach", qty: "2 bunches" },
+{ name: "Ginger", qty: "1 piece" },
+{ name: "Green peppers", qty: "×4" },
+{ name: "Paratha pack", qty: "1 pack" }];
 
 
 type Phase = "setup" | "generating" | "plan";
@@ -377,19 +377,19 @@ export default function MealPlan() {
                     </div>
                     <div className="glass-card-static space-y-3 p-5 lg:p-6">
                       <h3 className="text-sm font-bold text-foreground flex items-center gap-2"><ShoppingCart size={16} strokeWidth={1.5} /> Need to Buy</h3>
-                      {groceryNeed.map((item, i) =>
+                  {groceryNeed.map((item, i) =>
                   <div key={i} className="flex justify-between text-sm py-2 border-b border-white/[0.03] last:border-0">
                           <span className="text-foreground">{item.name}</span>
-                          <span className="text-muted-foreground font-medium">{item.price}</span>
+                          <span className="text-muted-foreground font-medium">{item.qty}</span>
                         </div>
                   )}
-                      <div className="flex justify-between text-base font-bold pt-2">
-                        <span className="text-foreground">Total</span>
-                        <span className="text-primary">$13.00</span>
-                      </div>
                     </div>
                     <div className="flex gap-3 lg:col-span-2">
-                      <motion.button whileTap={{ scale: 0.97 }} className="btn-secondary flex-1 py-3.5 text-sm font-medium flex items-center justify-center gap-2"><Copy size={16} strokeWidth={1.5} />Copy</motion.button>
+                      <motion.button whileTap={{ scale: 0.97 }} onClick={() => {
+                        const text = groceryNeed.map(i => `${i.name} — ${i.qty}`).join("\n");
+                        navigator.clipboard.writeText(text);
+                        import("sonner").then(({ toast }) => toast.success("Grocery list copied!"));
+                      }} className="btn-secondary flex-1 py-3.5 text-sm font-medium flex items-center justify-center gap-2"><Copy size={16} strokeWidth={1.5} />Copy</motion.button>
                       <motion.button whileTap={{ scale: 0.97 }} className="btn-secondary flex-1 py-3.5 text-sm font-medium flex items-center justify-center gap-2"><Share2 size={16} strokeWidth={1.5} />Share</motion.button>
                     </div>
                   </motion.div>
