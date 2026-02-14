@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
-const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } } };
+const fadeUp = { hidden: { opacity: 0, y: 16, filter: "blur(4px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease: "easeOut" as const } } };
 
 type FoodItem = {
   id: string;

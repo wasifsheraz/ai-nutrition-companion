@@ -13,7 +13,7 @@ const duration = (d: number) => (prefersReducedMotion ? 0 : d);
 // ── Page Transitions ──
 export const pageTransition: Variants = {
   initial: { opacity: 0, y: 12, filter: "blur(4px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: duration(0.5), ease: [0.25, 0.46, 0.45, 0.94] } },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: duration(0.5), ease: "easeOut" } },
   exit: { opacity: 0, y: -8, filter: "blur(4px)", transition: { duration: duration(0.3) } },
 };
 
@@ -26,7 +26,7 @@ export const stagger = (staggerDelay = 0.08): Variants => ({
 // ── Fade Up ──
 export const fadeUp = (delay = 0): Variants => ({
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: duration(0.5), ease: [0.25, 0.46, 0.45, 0.94], delay: duration(delay) } },
+  show: { opacity: 1, y: 0, transition: { duration: duration(0.5), ease: "easeOut", delay: duration(delay) } },
 });
 
 // ── Fade In ──
@@ -38,7 +38,7 @@ export const fadeIn = (delay = 0): Variants => ({
 // ── Scale In ──
 export const scaleIn = (delay = 0): Variants => ({
   hidden: { opacity: 0, scale: 0.92 },
-  show: { opacity: 1, scale: 1, transition: { duration: duration(0.4), ease: [0.25, 0.46, 0.45, 0.94], delay: duration(delay) } },
+  show: { opacity: 1, scale: 1, transition: { duration: duration(0.4), ease: "easeOut", delay: duration(delay) } },
 });
 
 // ── Slide from right ──
