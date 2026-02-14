@@ -181,49 +181,36 @@ export default function Landing() {
         >
           How It Works
         </motion.h2>
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-primary/40 via-secondary/30 to-transparent" />
-
-          <div className="space-y-8 lg:space-y-10">
-            {steps.map((s, i) => (
+        <div className="space-y-6 lg:space-y-8">
+          {steps.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" as const }}
+            >
               <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" as const }}
-                className="relative flex gap-5 lg:gap-7"
+                whileHover={{ scale: 1.02, y: -3 }}
+                transition={{ duration: 0.25 }}
+                className="glass-card p-6 lg:p-8 space-y-4"
               >
-                {/* Step number on the line */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300, damping: 20 }}
-                  className="relative z-10 shrink-0 w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-lg lg:text-xl font-bold text-primary-foreground shadow-lg"
-                  style={{ boxShadow: "0 4px 24px rgba(16,185,129,0.3)" }}
-                >
-                  {s.num}
-                </motion.div>
-
-                {/* Content card */}
-                <motion.div
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  transition={{ duration: 0.25 }}
-                  className="glass-card flex-1 p-5 lg:p-7 space-y-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="icon-box-sm" style={{ background: "rgba(16,185,129,0.1)", borderColor: "rgba(16,185,129,0.2)" }}>
-                      <s.icon size={18} className="text-primary" strokeWidth={1.5} />
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className="shrink-0 w-12 h-12 lg:w-14 lg:h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-lg lg:text-xl font-bold text-primary-foreground"
+                    style={{ boxShadow: "0 4px 20px rgba(16,185,129,0.25)" }}>
+                    {s.num}
+                  </div>
+                  <div className="flex-1">
                     <h3 className="text-base lg:text-lg font-bold text-foreground">{s.title}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-                </motion.div>
+                  <div className="icon-box-sm" style={{ background: "rgba(16,185,129,0.1)", borderColor: "rgba(16,185,129,0.2)" }}>
+                    <s.icon size={18} className="text-primary" strokeWidth={1.5} />
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed pl-16 lg:pl-[72px]">{s.desc}</p>
               </motion.div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
