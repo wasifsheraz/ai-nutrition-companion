@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronDown, Brain } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import FeedbackModal from "@/components/FeedbackModal";
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } };
 
 const recipes = [
   {
@@ -51,70 +51,66 @@ export default function Cook() {
 
   return (
     <AppLayout>
-      <div className="p-6 lg:p-12 max-w-2xl mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+      <div className="px-5 py-6 lg:p-10 max-w-lg mx-auto">
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             <button onClick={() => navigate("/dashboard")} className="btn-ghost p-2"><ChevronLeft size={20} /></button>
-            <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">🍳 What Can I Cook?</h1>
-            </div>
-            <span className="chip text-xs ml-auto">680 cal remaining</span>
+            <h1 className="text-xl font-display font-bold text-foreground flex-1">🍳 What Can I Cook?</h1>
+            <span className="chip text-[11px] py-1.5">680 cal left</span>
           </motion.div>
 
-          {/* Ingredients */}
-          <motion.div variants={fadeUp} className="space-y-2">
-            <p className="text-xs text-muted-foreground">Using ingredients from your Food Store:</p>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+          <motion.div variants={fadeUp} className="space-y-1.5">
+            <p className="text-[11px] text-muted-foreground font-medium">Using ingredients from your Food Store:</p>
+            <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
               {ingredients.map((ing, i) => (
-                <span key={i} className={`chip text-xs whitespace-nowrap ${ing.includes("⚠️") ? "chip-warning" : ""}`}>{ing}</span>
+                <span key={i} className={`chip text-[11px] py-1.5 ${ing.includes("⚠️") ? "chip-warning" : ""}`}>{ing}</span>
               ))}
             </div>
           </motion.div>
 
-          {/* Recipes */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {recipes.map((r, i) => (
               <motion.div
                 key={i}
                 variants={fadeUp}
-                className={`glass-card space-y-3 ${r.featured ? "border-primary/30 bg-gradient-to-br from-primary/5 to-teal-400/5" : ""}`}
+                className={`glass-card space-y-2.5 p-4 ${r.featured ? "border-primary/20 bg-gradient-to-br from-primary/[0.04] to-teal-400/[0.03]" : ""}`}
               >
-                {r.featured && <span className="text-xs font-bold text-primary">🌟 RECOMMENDED</span>}
-                <h3 className="text-base font-bold text-foreground">{r.name}</h3>
-                <p className="text-xs text-muted-foreground">
+                {r.featured && <span className="text-[11px] font-bold text-primary">🌟 RECOMMENDED</span>}
+                <h3 className="text-sm font-bold text-foreground">{r.name}</h3>
+                <p className="text-[11px] text-muted-foreground">
                   {r.cuisine} · ⏱️ {r.time} · 🔥 {r.cal} cal
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  💪 {r.protein}g protein · 🌾 {r.carbs}g carbs · 🧈 {r.fat}g fat
+                <p className="text-[11px] text-muted-foreground">
+                  💪 {r.protein}g · 🌾 {r.carbs}g · 🧈 {r.fat}g
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {r.uses.map((u, j) => (
-                    <span key={j} className={`text-xs ${u.includes("⚠️") ? "text-accent" : "text-muted-foreground"}`}>{u}</span>
+                    <span key={j} className={`text-[11px] ${u.includes("⚠️") ? "text-accent font-medium" : "text-muted-foreground"}`}>{u}</span>
                   ))}
                 </div>
-                {r.warning && <p className="text-xs text-accent">⚠️ {r.warning}</p>}
-                {r.badge && <span className="chip text-xs">{r.badge}</span>}
-                {r.featured && <p className="text-xs text-muted-foreground italic">You rated similar meals {r.rating} on average</p>}
+                {r.warning && <p className="text-[11px] text-accent font-medium">⚠️ {r.warning}</p>}
+                {r.badge && <span className="chip text-[11px] py-1">{r.badge}</span>}
+                {r.featured && <p className="text-[11px] text-muted-foreground/70 italic">Rated {r.rating} avg on similar meals</p>}
 
-                <div className="flex gap-2">
-                  <button onClick={() => setExpanded(expanded === i ? null : i)} className="btn-ghost text-xs flex items-center gap-1">
-                    View Recipe <ChevronDown size={14} className={`transition-transform ${expanded === i ? "rotate-180" : ""}`} />
+                <div className="flex gap-2 pt-1">
+                  <button onClick={() => setExpanded(expanded === i ? null : i)} className="btn-ghost text-[11px] flex items-center gap-1 p-0">
+                    Recipe <ChevronDown size={14} className={`transition-transform duration-300 ${expanded === i ? "rotate-180" : ""}`} />
                   </button>
                   {cooked === i ? (
-                    <motion.span initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="chip text-xs chip-selected">✅ Cooked!</motion.span>
+                    <motion.span initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="chip text-[11px] chip-selected py-1">✅ Cooked!</motion.span>
                   ) : (
-                    <button onClick={() => handleCook(i, r.name)} className="btn-primary text-xs py-1.5 px-4">🍳 Cook This!</button>
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleCook(i, r.name)} className="btn-primary text-[11px] py-1.5 px-4">🍳 Cook This!</motion.button>
                   )}
                 </div>
 
                 <AnimatePresence>
                   {expanded === i && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <div className="pt-3 border-t border-white/5 space-y-2">
+                      <div className="pt-2.5 border-t border-white/[0.05] space-y-2">
                         {r.steps.map((s, j) => (
                           <div key={j} className="flex gap-2 text-xs">
-                            <span className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0 text-[10px] font-bold">{j + 1}</span>
-                            <span className="text-muted-foreground">{s}</span>
+                            <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center shrink-0 text-[10px] font-bold">{j + 1}</span>
+                            <span className="text-muted-foreground leading-relaxed">{s}</span>
                           </div>
                         ))}
                       </div>
@@ -125,11 +121,12 @@ export default function Cook() {
             ))}
           </div>
 
-          {/* Personalization note */}
-          <motion.div variants={fadeUp} className="glass-card-static bg-primary/5 flex items-start gap-3">
-            <Brain size={18} className="text-primary shrink-0 mt-0.5" />
-            <p className="text-xs text-muted-foreground">
-              🧠 These recipes are based on your food store, Pakistani/Indian cuisine preference, and past 5-star ratings. I avoided spicy dishes since you rated them low last week.
+          <motion.div variants={fadeUp} className="glass-card-static bg-primary/[0.03] flex items-start gap-3 p-4">
+            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <Brain size={14} className="text-primary" />
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              These recipes match your food store, Pakistani/Indian preferences, and past ratings. Avoided spicy dishes since you rated them low. 🧠
             </p>
           </motion.div>
         </motion.div>

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check, Copy, Share2, Sparkles } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } };
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -27,7 +27,6 @@ const weekPlan: Record<string, { period: string; emoji: string; name: string; ca
   ],
 };
 
-// Fill remaining days with Mon data
 ["Thu", "Fri", "Sat", "Sun"].forEach((d, i) => {
   weekPlan[d] = weekPlan[Object.keys(weekPlan)[i % 3]];
 });
@@ -57,17 +56,17 @@ export default function MealPlan() {
   if (!generated) {
     return (
       <AppLayout>
-        <div className="p-6 lg:p-12 max-w-2xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+        <div className="px-5 py-6 lg:p-10 max-w-lg mx-auto">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
             <div className="flex items-center gap-3">
               <button onClick={() => navigate("/dashboard")} className="btn-ghost p-2"><ChevronLeft size={20} /></button>
-              <h1 className="text-2xl font-display font-bold text-foreground">📅 Generate Your Meal Plan</h1>
+              <h1 className="text-xl font-display font-bold text-foreground">📅 Generate Meal Plan</h1>
             </div>
-            <div className="glass-card-static space-y-6">
+            <div className="glass-card-static space-y-5 p-5">
               <p className="text-sm text-muted-foreground">Configure your plan</p>
-              <button onClick={() => setGenerated(true)} className="btn-primary w-full py-3 text-sm font-semibold">
-                <Sparkles size={16} className="inline mr-2" />Generate My Plan
-              </button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => setGenerated(true)} className="btn-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2">
+                <Sparkles size={16} />Generate My Plan
+              </motion.button>
             </div>
           </motion.div>
         </div>
@@ -77,36 +76,34 @@ export default function MealPlan() {
 
   return (
     <AppLayout>
-      <div className="p-6 lg:p-12 max-w-2xl mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+      <div className="px-5 py-6 lg:p-10 max-w-lg mx-auto">
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5">
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             <button onClick={() => navigate("/dashboard")} className="btn-ghost p-2"><ChevronLeft size={20} /></button>
-            <h1 className="text-2xl font-display font-bold text-foreground">📅 Meal Plan</h1>
+            <h1 className="text-xl font-display font-bold text-foreground">📅 Meal Plan</h1>
           </motion.div>
 
-          {/* Tab Toggle */}
           <motion.div variants={fadeUp} className="flex gap-2">
-            <button onClick={() => setTab("plan")} className={`chip text-xs ${tab === "plan" ? "chip-selected" : ""}`}>📅 Plan View</button>
-            <button onClick={() => setTab("grocery")} className={`chip text-xs ${tab === "grocery" ? "chip-selected" : ""}`}>🛒 Grocery List</button>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setTab("plan")} className={`chip text-xs ${tab === "plan" ? "chip-selected" : ""}`}>📅 Plan View</motion.button>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setTab("grocery")} className={`chip text-xs ${tab === "grocery" ? "chip-selected" : ""}`}>🛒 Grocery List</motion.button>
           </motion.div>
 
           {tab === "plan" ? (
             <>
-              {/* Day Selector */}
-              <motion.div variants={fadeUp} className="flex gap-2 overflow-x-auto pb-1">
+              <motion.div variants={fadeUp} className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
                 {days.map((d, i) => (
-                  <button
+                  <motion.button
                     key={d}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedDay(d)}
-                    className={`chip text-xs whitespace-nowrap ${selectedDay === d ? "chip-selected" : ""}`}
+                    className={`chip text-xs py-2 px-3 ${selectedDay === d ? "chip-selected" : ""}`}
                   >
                     {d} {i < 2 ? "✅" : i === 2 ? "📍" : ""}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.div>
 
-              {/* Meals */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {dayMeals.map((meal, i) => {
                   const key = `${selectedDay}-${i}`;
                   return (
@@ -114,35 +111,35 @@ export default function MealPlan() {
                       key={key}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="glass-card space-y-2"
+                      transition={{ delay: i * 0.08 }}
+                      className="glass-card space-y-2 p-4"
                     >
-                      <p className="text-xs text-muted-foreground">{meal.period}</p>
-                      <h3 className="text-base font-semibold text-foreground">{meal.emoji} {meal.name}</h3>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-[11px] text-muted-foreground font-medium">{meal.period}</p>
+                      <h3 className="text-sm font-bold text-foreground">{meal.emoji} {meal.name}</h3>
+                      <p className="text-[11px] text-muted-foreground">
                         🔥 {meal.cal} cal · 💪 {meal.protein}g · ⏱️ {meal.time}
                       </p>
-                      <div className="flex gap-2">
-                        <button className="btn-ghost text-xs">View Recipe</button>
-                        <button
+                      <div className="flex gap-2 pt-0.5">
+                        <button className="btn-ghost text-[11px] p-0">View Recipe</button>
+                        <motion.button
+                          whileTap={{ scale: 0.95 }}
                           onClick={() => toggleCooked(key)}
-                          className={`chip text-xs ${cooked[key] ? "chip-selected" : ""}`}
+                          className={`chip text-[11px] py-1 ${cooked[key] ? "chip-selected" : ""}`}
                         >
                           {cooked[key] ? "✅ Cooked" : "Mark Cooked"}
-                        </button>
+                        </motion.button>
                       </div>
                     </motion.div>
                   );
                 })}
               </div>
 
-              {/* Daily Summary */}
-              <motion.div variants={fadeUp} className="glass-card-static bg-primary/5 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Today</span>
-                  <span className="text-foreground font-medium">{dayTotal} / 1,800 cal · {dayProtein}g protein</span>
+              <motion.div variants={fadeUp} className="glass-card-static bg-primary/[0.03] space-y-2 p-4">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground font-medium">Today</span>
+                  <span className="text-foreground font-bold">{dayTotal} / 1,800 cal · {dayProtein}g protein</span>
                 </div>
-                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                <div className="h-2.5 rounded-full bg-white/[0.04] overflow-hidden">
                   <motion.div
                     className="h-full bg-gradient-to-r from-primary to-teal-400 rounded-full"
                     initial={{ width: 0 }}
@@ -153,31 +150,31 @@ export default function MealPlan() {
               </motion.div>
             </>
           ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <div className="glass-card-static space-y-3">
-                <h3 className="text-sm font-semibold text-primary">✅ Already in Your Fridge</h3>
-                <div className="flex flex-wrap gap-2">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+              <div className="glass-card-static space-y-2.5 p-4">
+                <h3 className="text-xs font-bold text-primary">✅ Already in Your Fridge</h3>
+                <div className="flex flex-wrap gap-1.5">
                   {groceryHave.map((item, i) => (
-                    <span key={i} className="chip text-xs chip-selected">{item}</span>
+                    <span key={i} className="chip text-[11px] chip-selected py-1.5">{item}</span>
                   ))}
                 </div>
               </div>
-              <div className="glass-card-static space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">🛒 Need to Buy</h3>
+              <div className="glass-card-static space-y-2.5 p-4">
+                <h3 className="text-xs font-bold text-foreground">🛒 Need to Buy</h3>
                 {groceryNeed.map((item, i) => (
-                  <div key={i} className="flex justify-between text-sm py-1 border-b border-white/5 last:border-0">
+                  <div key={i} className="flex justify-between text-sm py-1.5 border-b border-white/[0.04] last:border-0">
                     <span className="text-foreground">{item.name}</span>
-                    <span className="text-muted-foreground">{item.price}</span>
+                    <span className="text-muted-foreground font-medium">{item.price}</span>
                   </div>
                 ))}
                 <div className="flex justify-between text-sm font-bold pt-2">
-                  <span className="text-foreground">Total Estimated</span>
+                  <span className="text-foreground">Total</span>
                   <span className="text-primary">$13.00</span>
                 </div>
               </div>
-              <div className="flex gap-3">
-                <button className="btn-secondary flex-1 py-2 text-xs"><Copy size={14} className="inline mr-1" />Copy List</button>
-                <button className="btn-secondary flex-1 py-2 text-xs"><Share2 size={14} className="inline mr-1" />Share</button>
+              <div className="flex gap-2.5">
+                <motion.button whileTap={{ scale: 0.97 }} className="btn-secondary flex-1 py-3 text-xs font-medium flex items-center justify-center gap-1.5"><Copy size={14} />Copy</motion.button>
+                <motion.button whileTap={{ scale: 0.97 }} className="btn-secondary flex-1 py-3 text-xs font-medium flex items-center justify-center gap-1.5"><Share2 size={14} />Share</motion.button>
               </div>
             </motion.div>
           )}

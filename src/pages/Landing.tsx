@@ -1,21 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Camera, CalendarDays, Sparkles, ChevronRight, Star, ArrowRight } from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
 
-const floatingEmojis = ["🥗", "🍎", "🥑", "🍗", "🥚", "🍅", "🥦", "🍌", "🧀", "🥕"];
+const floatingEmojis = ["🥗", "🍎", "🥑", "🍗", "🥚", "🍅", "🥦", "🍌"];
 
 const features = [
-  { icon: "📸", title: "Snap & Know", desc: "Take a photo of any food — get instant AI nutrition analysis", gradient: "from-primary/20 to-teal-400/20" },
-  { icon: "🧊", title: "Smart Food Store", desc: "Scan your fridge. Know what you have. Reduce food waste.", gradient: "from-teal-400/20 to-cyan-400/20" },
-  { icon: "📅", title: "AI Meal Plans", desc: "Personalized weekly plans that learn your taste preferences", gradient: "from-primary/20 to-emerald-400/20" },
+  { icon: "📸", title: "Snap & Know", desc: "Take a photo of any food — get instant AI nutrition analysis" },
+  { icon: "🧊", title: "Smart Food Store", desc: "Scan your fridge. Know what you have. Reduce food waste." },
+  { icon: "📅", title: "AI Meal Plans", desc: "Personalized weekly plans that learn your taste preferences" },
 ];
 
 const steps = [
   { num: 1, title: "Set Up Profile", icon: "👤" },
-  { num: 2, title: "Scan Your Kitchen", icon: "📸" },
-  { num: 3, title: "Get AI Recommendations", icon: "🧠" },
-  { num: 4, title: "Track & Improve", icon: "📊" },
+  { num: 2, title: "Scan Kitchen", icon: "📸" },
+  { num: 3, title: "Get AI Recs", icon: "🧠" },
+  { num: 4, title: "Track & Win", icon: "📊" },
 ];
 
 const testimonials = [
@@ -56,18 +56,18 @@ function FloatingParticles() {
       {floatingEmojis.map((emoji, i) => (
         <motion.div
           key={i}
-          className="absolute text-2xl"
+          className="absolute text-xl md:text-2xl"
           initial={{
-            x: `${Math.random() * 100}%`,
-            y: `${Math.random() * 100}%`,
-            opacity: 0.1 + Math.random() * 0.2,
+            x: `${10 + Math.random() * 80}%`,
+            y: `${10 + Math.random() * 80}%`,
+            opacity: 0.06 + Math.random() * 0.12,
           }}
           animate={{
             y: [null, `${Math.random() * 100}%`, `${Math.random() * 100}%`],
             x: [null, `${Math.random() * 100}%`, `${Math.random() * 100}%`],
           }}
           transition={{
-            duration: 15 + Math.random() * 20,
+            duration: 20 + Math.random() * 15,
             repeat: Infinity,
             repeatType: "reverse",
             ease: "linear",
@@ -80,111 +80,114 @@ function FloatingParticles() {
   );
 }
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { scrollY } = useScroll();
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 400], [1, 0.95]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 overflow-hidden">
         <FloatingParticles />
+        {/* Ambient glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-[120px] pointer-events-none" />
+        
         <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="text-center z-10 max-w-2xl"
+          style={{ opacity: heroOpacity, scale: heroScale }}
+          className="text-center z-10 max-w-lg mx-auto"
         >
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl md:text-7xl font-display font-bold gradient-text-shimmer mb-4"
-          >
-            NutriAI
-          </motion.h1>
-          <motion.p variants={fadeUp} className="text-xl text-muted-foreground mb-2">
-            Your AI-Powered Personal Nutritionist
-          </motion.p>
-          <motion.p variants={fadeUp} className="text-base text-muted-foreground/70 mb-10">
-            Snap food. Scan your fridge. Get personalized meal plans.
-          </motion.p>
-          <motion.div variants={fadeUp}>
-            <button
-              onClick={() => navigate("/auth")}
-              className="btn-primary px-12 py-4 text-lg font-bold animate-pulse-glow"
+          <motion.div variants={stagger} initial="hidden" animate="show">
+            <motion.h1
+              variants={fadeUp}
+              className="text-5xl md:text-7xl font-display font-bold gradient-text-shimmer mb-3 leading-tight"
             >
-              Get Started Free <ArrowRight className="inline ml-2" size={20} />
-            </button>
-            <p className="text-xs text-muted-foreground/50 mt-4">
-              No credit card required • 100% free
-            </p>
+              NutriAI
+            </motion.h1>
+            <motion.p variants={fadeUp} className="text-lg md:text-xl text-muted-foreground mb-1.5 font-medium">
+              Your AI-Powered Personal Nutritionist
+            </motion.p>
+            <motion.p variants={fadeUp} className="text-sm md:text-base text-muted-foreground/60 mb-10 max-w-sm mx-auto leading-relaxed">
+              Snap food. Scan your fridge. Get personalized meal plans.
+            </motion.p>
+            <motion.div variants={fadeUp}>
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate("/auth")}
+                className="btn-primary px-10 py-4 text-base font-bold animate-pulse-glow rounded-2xl"
+              >
+                Get Started Free <ArrowRight className="inline ml-1.5" size={18} />
+              </motion.button>
+              <p className="text-[11px] text-muted-foreground/40 mt-4 tracking-wide">
+                No credit card required • 100% free
+              </p>
+            </motion.div>
           </motion.div>
         </motion.div>
       </section>
 
       {/* Stats */}
-      <section className="px-6 -mt-20 relative z-10 max-w-4xl mx-auto">
-        <div className="glass-card-static flex flex-col sm:flex-row items-center justify-around gap-6 py-8">
+      <section className="px-5 -mt-16 relative z-10 max-w-lg lg:max-w-3xl mx-auto">
+        <div className="glass-card-static flex items-center justify-around py-6 px-4">
           {[
             { value: 10000, label: "Meals Analyzed", suffix: "+" },
             { value: 500, label: "Recipes", suffix: "+" },
             { value: 98, label: "Accuracy", suffix: "%" },
           ].map((stat, i) => (
             <div key={i} className="text-center">
-              <div className="text-3xl font-bold text-foreground font-display">
+              <div className="text-2xl md:text-3xl font-bold text-foreground font-display">
                 <CountUp target={stat.value} />
                 {stat.suffix}
               </div>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Features */}
-      <section className="px-6 py-24 max-w-5xl mx-auto">
+      <section className="px-5 py-20 max-w-lg lg:max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
-          <h2 className="text-3xl font-display font-bold text-foreground mb-2">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3">
             Everything You Need to Eat Smart
           </h2>
-          <div className="w-16 h-1 bg-primary rounded-full mx-auto" />
+          <div className="w-12 h-1 bg-primary rounded-full mx-auto" />
         </motion.div>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4">
           {features.map((f, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              whileHover={{ y: -4, boxShadow: "0 0 30px rgba(16,185,129,0.15)" }}
-              className={`glass-card text-center space-y-4 bg-gradient-to-br ${f.gradient}`}
+              transition={{ delay: i * 0.12, duration: 0.5 }}
+              className="glass-card text-center space-y-3 p-5"
             >
-              <div className="text-5xl">{f.icon}</div>
-              <h3 className="text-lg font-semibold text-foreground">{f.title}</h3>
-              <p className="text-sm text-muted-foreground">{f.desc}</p>
+              <div className="text-4xl">{f.icon}</div>
+              <h3 className="text-base font-bold text-foreground">{f.title}</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="px-6 py-16 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-display font-bold text-foreground text-center mb-12">How It Works</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="px-5 py-14 max-w-lg lg:max-w-3xl mx-auto">
+        <h2 className="text-2xl font-display font-bold text-foreground text-center mb-10">How It Works</h2>
+        <div className="grid grid-cols-4 gap-3 md:gap-6">
           {steps.map((s, i) => (
             <motion.div
               key={i}
@@ -192,73 +195,80 @@ export default function Landing() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="text-center space-y-3"
+              className="text-center space-y-2"
             >
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-xl font-bold text-foreground mx-auto">
+              <div className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base md:text-lg font-bold text-foreground mx-auto shadow-lg shadow-primary/20">
                 {s.num}
               </div>
-              <div className="text-2xl">{s.icon}</div>
-              <p className="text-sm font-medium text-foreground">{s.title}</p>
+              <div className="text-xl">{s.icon}</div>
+              <p className="text-[11px] md:text-xs font-medium text-foreground leading-tight">{s.title}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="px-6 py-16 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-display font-bold text-foreground text-center mb-2">Trusted by Thousands</h2>
-        <p className="text-sm text-muted-foreground text-center mb-10">Students, fitness enthusiasts, and busy families</p>
-        <div className="grid md:grid-cols-3 gap-6">
+      <section className="px-5 py-14 max-w-lg lg:max-w-3xl mx-auto">
+        <h2 className="text-xl font-display font-bold text-foreground text-center mb-1.5">Trusted by Thousands</h2>
+        <p className="text-xs text-muted-foreground text-center mb-8">Students, fitness enthusiasts, and busy families</p>
+        <div className="grid md:grid-cols-3 gap-4">
           {testimonials.map((t, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass-card space-y-3"
+              className="glass-card space-y-2.5 p-4"
             >
-              <div className="flex gap-1">
+              <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map(s => (
-                  <Star key={s} size={14} className="fill-amber-400 text-amber-400" />
+                  <Star key={s} size={12} className="fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <p className="text-sm text-foreground italic">"{t.text}"</p>
-              <p className="text-xs text-muted-foreground">— {t.name}, {t.age}</p>
+              <p className="text-sm text-foreground leading-relaxed">"{t.text}"</p>
+              <p className="text-[11px] text-muted-foreground">— {t.name}, {t.age}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* SDG + Footer */}
-      <section className="px-6 py-12 text-center space-y-6">
-        <div className="glass-card-static max-w-3xl mx-auto py-8">
-          <p className="text-xs text-muted-foreground mb-4">Supporting UN Sustainable Development Goals</p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <span className="chip">🎯 SDG 2: Zero Hunger</span>
-            <span className="chip">❤️ SDG 3: Good Health</span>
-            <span className="chip">♻️ SDG 12: Responsible Consumption</span>
+      {/* SDG */}
+      <section className="px-5 py-10">
+        <div className="glass-card-static max-w-lg lg:max-w-2xl mx-auto py-6 text-center">
+          <p className="text-[11px] text-muted-foreground mb-3 uppercase tracking-wider">Supporting UN SDGs</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="chip text-xs">🎯 Zero Hunger</span>
+            <span className="chip text-xs">❤️ Good Health</span>
+            <span className="chip text-xs">♻️ Responsible Consumption</span>
           </div>
         </div>
       </section>
 
       {/* CTA Footer */}
-      <section className="px-6 py-16">
-        <div className="max-w-3xl mx-auto glass-card-static text-center bg-gradient-to-r from-primary/20 to-teal-400/20 py-12">
-          <h2 className="text-2xl font-display font-bold text-foreground mb-4">
+      <section className="px-5 py-14">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-lg lg:max-w-2xl mx-auto glass-card-static text-center bg-gradient-to-r from-primary/[0.08] to-teal-400/[0.06] py-10 px-6"
+        >
+          <h2 className="text-xl md:text-2xl font-display font-bold text-foreground mb-5">
             Start Your Nutrition Journey Today
           </h2>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/auth")}
-            className="btn-primary px-10 py-3 text-base font-bold"
+            className="btn-primary px-8 py-3.5 text-sm font-bold"
           >
-            Get Started <ArrowRight className="inline ml-2" size={18} />
-          </button>
-        </div>
+            Get Started <ArrowRight className="inline ml-1.5" size={16} />
+          </motion.button>
+        </motion.div>
       </section>
 
-      <footer className="px-6 py-8 text-center">
-        <p className="text-xs text-muted-foreground">
+      <footer className="px-5 py-8 text-center">
+        <p className="text-[11px] text-muted-foreground/50">
           Built with ❤️ for healthier lives • Made for Hackathon 2024
         </p>
       </footer>
