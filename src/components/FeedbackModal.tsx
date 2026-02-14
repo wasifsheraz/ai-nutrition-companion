@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, Heart, ThumbsDown, Flame, Drumstick, Feather, Zap, Frown, Users, RefreshCw, Ban, CheckCircle2, Sparkles } from "lucide-react";
 
 const quickTags = [
-  { emoji: "😋", label: "Loved It", positive: true },
-  { emoji: "👎", label: "Not Great", positive: false },
-  { emoji: "🌶️", label: "Too Spicy", positive: false },
-  { emoji: "🧂", label: "Too Bland", positive: false },
-  { emoji: "🏋️", label: "Too Heavy", positive: false },
-  { emoji: "⚡", label: "Quick & Easy", positive: true },
-  { emoji: "👨‍👩‍👧", label: "Family Approved", positive: true },
-  { emoji: "🔁", label: "Would Repeat", positive: true },
-  { emoji: "👌", label: "Perfect!", positive: true },
+  { icon: Heart, label: "Loved It", positive: true },
+  { icon: ThumbsDown, label: "Not Great", positive: false },
+  { icon: Flame, label: "Too Spicy", positive: false },
+  { icon: Frown, label: "Too Bland", positive: false },
+  { icon: Drumstick, label: "Too Heavy", positive: false },
+  { icon: Zap, label: "Quick & Easy", positive: true },
+  { icon: Users, label: "Family Approved", positive: true },
+  { icon: RefreshCw, label: "Would Repeat", positive: true },
+  { icon: CheckCircle2, label: "Perfect!", positive: true },
 ];
 
 interface FeedbackModalProps {
@@ -21,7 +21,7 @@ interface FeedbackModalProps {
   mealEmoji?: string;
 }
 
-export default function FeedbackModal({ isOpen, onClose, mealName, mealEmoji = "🍛" }: FeedbackModalProps) {
+export default function FeedbackModal({ isOpen, onClose, mealName }: FeedbackModalProps) {
   const [rating, setRating] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -57,30 +57,30 @@ export default function FeedbackModal({ isOpen, onClose, mealName, mealEmoji = "
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 glass-card-static rounded-t-[24px] rounded-b-none max-h-[70vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 glass-card-static rounded-t-[28px] rounded-b-none max-h-[70vh] overflow-y-auto"
           >
-            <div className="flex justify-center pt-3 pb-2">
-              <div className="w-10 h-1 rounded-full bg-white/15" />
+            <div className="flex justify-center pt-4 pb-2">
+              <div className="w-12 h-1.5 rounded-full bg-white/15" />
             </div>
 
             {submitted ? (
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-center py-12"
+                className="text-center py-16"
               >
-                <div className="text-5xl mb-4">✨</div>
-                <p className="text-base font-bold text-foreground">Thanks! I'll remember this 🧠</p>
+                <Sparkles size={48} className="text-primary mx-auto mb-4" />
+                <p className="text-lg font-bold text-foreground">Thanks! I'll remember this</p>
               </motion.div>
             ) : (
-              <div className="px-5 pb-8 space-y-5">
+              <div className="px-6 pb-10 space-y-6">
                 <div className="text-center">
-                  <p className="text-base font-bold text-foreground">
-                    How was the {mealName}? {mealEmoji}
+                  <p className="text-lg font-bold text-foreground">
+                    How was the {mealName}?
                   </p>
                 </div>
 
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-4">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <motion.button
                       key={star}
@@ -91,7 +91,7 @@ export default function FeedbackModal({ isOpen, onClose, mealName, mealEmoji = "
                       className="p-1"
                     >
                       <Star
-                        size={32}
+                        size={36}
                         className={`transition-all duration-200 ${
                           star <= (hoveredStar || rating)
                             ? "fill-amber-400 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
@@ -102,19 +102,19 @@ export default function FeedbackModal({ isOpen, onClose, mealName, mealEmoji = "
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-2 justify-center">
+                <div className="flex flex-wrap gap-2.5 justify-center">
                   {quickTags.map((tag) => (
                     <motion.button
                       key={tag.label}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => toggleTag(tag.label)}
-                      className={`chip text-xs ${
+                      className={`chip text-sm flex items-center gap-1.5 ${
                         selectedTags.includes(tag.label)
                           ? tag.positive ? "chip-selected" : "bg-destructive/15 text-destructive border-destructive/25"
                           : ""
                       }`}
                     >
-                      {tag.emoji} {tag.label}
+                      <tag.icon size={14} /> {tag.label}
                     </motion.button>
                   ))}
                 </div>
@@ -125,10 +125,10 @@ export default function FeedbackModal({ isOpen, onClose, mealName, mealEmoji = "
                   rows={2}
                 />
 
-                <motion.button whileTap={{ scale: 0.97 }} onClick={handleSubmit} className="btn-primary w-full py-3.5 text-sm font-bold">
-                  Submit Feedback ✨
+                <motion.button whileTap={{ scale: 0.97 }} onClick={handleSubmit} className="btn-primary w-full py-4 text-base font-bold flex items-center justify-center gap-2">
+                  <Sparkles size={18} /> Submit Feedback
                 </motion.button>
-                <button onClick={onClose} className="btn-ghost w-full py-2 text-sm text-center block">
+                <button onClick={onClose} className="btn-ghost w-full py-2.5 text-sm text-center block">
                   Skip
                 </button>
               </div>
