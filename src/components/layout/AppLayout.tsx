@@ -18,67 +18,68 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-20 glass-card-static fixed left-0 top-0 h-full z-40 rounded-none items-center py-8 gap-2">
-        <div className="gradient-text font-display font-bold text-lg mb-8">N</div>
+      <aside className="hidden lg:flex flex-col w-[72px] fixed left-0 top-0 h-full z-40 items-center py-6 gap-1 border-r border-white/[0.06] bg-background/80 backdrop-blur-2xl">
+        <div className="gradient-text font-display font-bold text-xl mb-6">N</div>
         {sidebarItems.map((item) => {
           const active = location.pathname === item.to;
           return (
             <NavLink
               key={item.to}
               to={item.to}
-              className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 w-16 ${
+              className={`flex flex-col items-center gap-0.5 p-2.5 rounded-xl transition-all duration-300 w-14 relative ${
                 active
-                  ? "bg-primary/20 text-primary nav-glow"
-                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <item.icon size={20} />
-              <span className="text-[10px] font-medium">{item.label}</span>
               {active && (
                 <motion.div
-                  layoutId="sidebar-dot"
-                  className="w-1 h-1 rounded-full bg-primary"
+                  layoutId="sidebar-active"
+                  className="absolute inset-0 rounded-xl bg-primary/10 border border-primary/20"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
+              <item.icon size={20} className="relative z-10" />
+              <span className="text-[9px] font-medium relative z-10">{item.label}</span>
             </NavLink>
           );
         })}
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-20 pb-24 lg:pb-8">
+      <main className="flex-1 lg:ml-[72px] pb-[88px] lg:pb-6">
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
           {children}
         </motion.div>
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass-card-static rounded-none rounded-t-2xl px-2 py-2">
-        <div className="flex justify-around items-center">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] bg-background/80 backdrop-blur-2xl">
+        <div className="flex justify-around items-center px-2 py-1 safe-area-bottom">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-200 min-w-[56px] ${
+                className={`flex flex-col items-center gap-0.5 py-2 px-3 rounded-2xl transition-all duration-300 relative min-w-[52px] ${
                   active ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {active && (
                   <motion.div
-                    layoutId="nav-dot"
-                    className="w-5 h-1 rounded-full bg-primary mb-1"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    layoutId="nav-pill"
+                    className="absolute -top-1 w-8 h-1 rounded-full bg-primary"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
-                <item.icon size={20} />
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <item.icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                <span className="text-[10px] font-semibold">{item.label}</span>
               </NavLink>
             );
           })}
