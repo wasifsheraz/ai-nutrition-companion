@@ -137,24 +137,6 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Stats */}
-      <section className="px-6 -mt-20 relative z-10 max-w-5xl mx-auto">
-        <div className="glass-card-static flex items-center justify-around py-8 lg:py-10 px-6">
-          {[
-            { value: 10000, label: "Meals Analyzed", suffix: "+" },
-            { value: 500, label: "Recipes", suffix: "+" },
-            { value: 98, label: "Accuracy", suffix: "%" },
-          ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground font-display">
-                <CountUp target={stat.value} />
-                {stat.suffix}
-              </div>
-              <p className="text-sm text-muted-foreground mt-1 font-medium">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Features */}
       <section id="features" className="px-6 py-24 lg:py-32 max-w-7xl mx-auto">
