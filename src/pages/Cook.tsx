@@ -2,26 +2,32 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
-  ChevronLeft, Plus, X, UtensilsCrossed, Flame, Dumbbell, Clock,
-  Sparkles, ChefHat, Search, Wheat, Timer, BarChart3, ListOrdered,
-  RefreshCw, CookingPot, Warehouse
+  ChevronLeft, Plus, X, UtensilsCrossed, Flame, Dumbbell,
+  Sparkles, Wheat, Timer, BarChart3, ListOrdered,
+  RefreshCw, ShoppingCart, Check, Zap, Heart, Salad,
+  BrainCircuit, PackagePlus, ArrowRight, ScanSearch
 } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import FeedbackModal from "@/components/FeedbackModal";
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
-type MealType = "breakfast" | "lunch" | "dinner";
-type CookMode = null | "new" | "store";
+type CookMode = null | "ingredients" | "ai";
 type Phase = "input" | "searching" | "result";
 
 const mockRecipe = {
   name: "Grilled Chicken Quinoa Bowl",
-  ingredients: ["Chicken Breast", "Quinoa", "Avocado", "Cherry Tomatoes", "Lemon"],
+  ingredients: [
+    { name: "Chicken Breast", available: true },
+    { name: "Quinoa", available: true },
+    { name: "Avocado", available: false },
+    { name: "Cherry Tomatoes", available: true },
+    { name: "Lemon", available: false },
+  ],
   complexity: "Medium",
   time: "30 min",
   cal: 520,
@@ -39,19 +45,28 @@ const mockRecipe = {
 };
 
 const searchingMessages = [
-  "Analyzing your ingredients...",
-  "Finding the best recipe match...",
-  "Calculating nutritional balance...",
-  "Preparing your recommendation...",
+  "Scanning your ingredients...",
+  "Matching flavor profiles...",
+  "Finding the perfect recipe...",
+  "Optimizing nutrition balance...",
+  "Preparing your meal plan...",
+];
+
+const mealPreferences = [
+  { label: "Spicy", icon: Flame },
+  { label: "Healthy", icon: Heart },
+  { label: "Quick", icon: Zap },
+  { label: "High Protein", icon: Dumbbell },
 ];
 
 export default function Cook() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<CookMode>(null);
   const [phase, setPhase] = useState<Phase>("input");
-  const [mealType, setMealType] = useState<MealType>("lunch");
+  const [selectedPrefs, setSelectedPrefs] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [inputVal, setInputVal] = useState("");
+  const [prefInput, setPrefInput] = useState("");
   const [searchMsgIdx, setSearchMsgIdx] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
 
@@ -63,8 +78,20 @@ export default function Cook() {
     }
   };
 
-  const removeIngredient = (ing: string) => {
+  const removeIngredient = (ing: string) =>
     setIngredients((prev) => prev.filter((i) => i !== ing));
+
+  const togglePref = (label: string) =>
+    setSelectedPrefs((prev) =>
+      prev.includes(label) ? prev.filter((p) => p !== label) : [...prev, label]
+    );
+
+  const addCustomPref = () => {
+    const val = prefInput.trim();
+    if (val && !selectedPrefs.includes(val)) {
+      setSelectedPrefs((prev) => [...prev, val]);
+      setPrefInput("");
+    }
   };
 
   const handleGenerate = () => {
@@ -79,24 +106,43 @@ export default function Cook() {
       } else {
         setSearchMsgIdx(idx);
       }
-    }, 900);
+    }, 800);
   };
 
   const handleReset = () => {
     setPhase("input");
     setIngredients([]);
     setInputVal("");
+    setPrefInput("");
+    setSelectedPrefs([]);
     setSearchMsgIdx(0);
   };
 
-  const handleCookIt = () => {
-    setShowFeedback(true);
+  const handleNewMealSameIngredients = () => {
+    setPhase("searching");
+    setSearchMsgIdx(0);
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx++;
+      if (idx >= searchingMessages.length) {
+        clearInterval(interval);
+        setTimeout(() => setPhase("result"), 600);
+      } else {
+        setSearchMsgIdx(idx);
+      }
+    }, 800);
   };
+
+  const handleAddNewIngredients = () => {
+    setPhase("input");
+  };
+
+  const handleCookIt = () => setShowFeedback(true);
 
   const handleSelectMode = (m: CookMode) => {
     setMode(m);
     setPhase("input");
-    if (m === "store") {
+    if (m === "ai") {
       setIngredients(["Chicken", "Tomatoes", "Spinach", "Rice", "Onions"]);
       setTimeout(() => handleGenerate(), 100);
     }
@@ -109,6 +155,7 @@ export default function Cook() {
       setMode(null);
       setPhase("input");
       setIngredients([]);
+      setSelectedPrefs([]);
     } else {
       navigate("/dashboard");
     }
@@ -117,102 +164,159 @@ export default function Cook() {
   return (
     <AppLayout>
       <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-3xl mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7">
           {/* Header */}
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             <button onClick={handleBack} className="btn-ghost p-2">
               <ChevronLeft size={22} />
             </button>
-            <h1 className="text-2xl font-display font-bold text-foreground flex-1 flex items-center gap-2">
-              <div className="icon-box-sm">
-                <ChefHat size={20} className="text-primary" strokeWidth={1.5} />
-              </div>
-              Cook
-            </h1>
+            <div className="flex-1">
+              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground flex items-center gap-3">
+                <div className="icon-box-sm">
+                  <Salad size={20} className="text-primary" strokeWidth={1.5} />
+                </div>
+                Cook
+              </h1>
+              <p className="text-muted-foreground text-sm mt-1 ml-[52px]">Create your perfect meal</p>
+            </div>
           </motion.div>
 
-          {/* Mode Selection */}
           <AnimatePresence mode="wait">
+            {/* ─── Mode Selection ─── */}
             {!mode && (
               <motion.div
                 key="mode-select"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-4"
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="space-y-5"
               >
-                <p className="text-muted-foreground text-sm">How would you like to find a recipe?</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <p className="text-muted-foreground text-sm font-medium">Choose how you'd like to start</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Option 1: Select Ingredients */}
                   <motion.button
-                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileHover={{ scale: 1.02, y: -4 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => handleSelectMode("new")}
-                    className="glass-card text-left space-y-4 p-6"
+                    onClick={() => handleSelectMode("ingredients")}
+                    className="glass-card text-left p-7 space-y-5 group relative"
                   >
-                    <div className="icon-box">
-                      <Plus size={22} className="text-primary" strokeWidth={1.5} />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-all duration-500" />
+                    <div className="icon-box-lg">
+                      <PackagePlus size={26} className="text-primary" strokeWidth={1.5} />
                     </div>
-                    <div>
-                      <p className="text-lg font-bold text-foreground">New Ingredients</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Enter ingredients you have and get an AI-powered recipe
+                    <div className="space-y-2">
+                      <p className="text-lg font-bold text-foreground">Select Ingredients</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Enter your ingredients & meal preference — get a personalized AI recipe
                       </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-primary text-sm font-semibold">
+                      Get Started <ArrowRight size={14} strokeWidth={2} />
                     </div>
                   </motion.button>
 
+                  {/* Option 2: AI Decide */}
                   <motion.button
-                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileHover={{ scale: 1.02, y: -4 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => handleSelectMode("store")}
-                    className="glass-card text-left space-y-4 p-6"
+                    onClick={() => handleSelectMode("ai")}
+                    className="glass-card text-left p-7 space-y-5 group relative"
                   >
-                    <div className="icon-box">
-                      <Warehouse size={22} className="text-primary" strokeWidth={1.5} />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-secondary/10 transition-all duration-500" />
+                    <div className="icon-box-lg" style={{ background: "rgba(20, 184, 166, 0.08)", borderColor: "rgba(20, 184, 166, 0.15)" }}>
+                      <BrainCircuit size={26} className="text-secondary" strokeWidth={1.5} />
                     </div>
-                    <div>
-                      <p className="text-lg font-bold text-foreground">From Food Store</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Generate a recipe using items from your pantry
+                    <div className="space-y-2">
+                      <p className="text-lg font-bold text-foreground">Let AI Decide</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        AI picks the best meal from the items in your Food Store
                       </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-secondary text-sm font-semibold">
+                      Auto Generate <ArrowRight size={14} strokeWidth={2} />
                     </div>
                   </motion.button>
                 </div>
               </motion.div>
             )}
 
-            {/* Input Phase */}
-            {mode === "new" && phase === "input" && (
+            {/* ─── Input Phase ─── */}
+            {mode === "ingredients" && phase === "input" && (
               <motion.div
                 key="input-phase"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-5"
+                transition={{ duration: 0.5 }}
+                className="space-y-6"
               >
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-foreground">Meal Type</label>
-                  <div className="flex gap-3">
-                    {(["breakfast", "lunch", "dinner"] as MealType[]).map((t) => (
+                {/* Meal Preference */}
+                <div className="glass-card-static p-6 space-y-4">
+                  <label className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Heart size={16} className="text-primary" strokeWidth={1.5} />
+                    Meal Preference
+                  </label>
+                  <div className="flex flex-wrap gap-2.5">
+                    {mealPreferences.map(({ label, icon: Icon }) => (
                       <motion.button
-                        key={t}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setMealType(t)}
-                        className={`chip text-sm py-2.5 px-5 capitalize ${mealType === t ? "chip-selected" : ""}`}
+                        key={label}
+                        whileTap={{ scale: 0.93 }}
+                        onClick={() => togglePref(label)}
+                        className={`chip text-sm py-2.5 px-5 flex items-center gap-2 ${
+                          selectedPrefs.includes(label) ? "chip-selected" : ""
+                        }`}
                       >
-                        {t}
+                        <Icon size={14} strokeWidth={1.5} />
+                        {label}
                       </motion.button>
                     ))}
                   </div>
+                  <div className="flex gap-2">
+                    <input
+                      value={prefInput}
+                      onChange={(e) => setPrefInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && addCustomPref()}
+                      placeholder="Add custom preference..."
+                      className="input-glass flex-1 text-sm"
+                    />
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={addCustomPref}
+                      className="btn-secondary px-4"
+                    >
+                      <Plus size={16} />
+                    </motion.button>
+                  </div>
+                  {selectedPrefs.filter((p) => !mealPreferences.find((m) => m.label === p)).length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedPrefs
+                        .filter((p) => !mealPreferences.find((m) => m.label === p))
+                        .map((p) => (
+                          <span key={p} className="chip chip-selected text-sm py-2 flex items-center gap-1.5">
+                            {p}
+                            <button onClick={() => togglePref(p)}>
+                              <X size={12} />
+                            </button>
+                          </span>
+                        ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-foreground">Add Ingredients</label>
+                {/* Ingredients Input */}
+                <div className="glass-card-static p-6 space-y-4">
+                  <label className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Salad size={16} className="text-primary" strokeWidth={1.5} />
+                    Add Ingredients
+                  </label>
                   <div className="flex gap-2">
                     <input
                       value={inputVal}
                       onChange={(e) => setInputVal(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && addIngredient()}
-                      placeholder="Type ingredient and press Enter..."
+                      placeholder="e.g. Chicken, Rice, Tomatoes..."
                       className="input-glass flex-1"
                     />
                     <motion.button
@@ -223,42 +327,43 @@ export default function Cook() {
                       <Plus size={20} />
                     </motion.button>
                   </div>
+
+                  {ingredients.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex flex-wrap gap-2"
+                    >
+                      {ingredients.map((ing) => (
+                        <motion.span
+                          key={ing}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="chip text-sm py-2 flex items-center gap-1.5"
+                        >
+                          {ing}
+                          <button onClick={() => removeIngredient(ing)}>
+                            <X size={14} className="text-muted-foreground hover:text-foreground transition-colors" />
+                          </button>
+                        </motion.span>
+                      ))}
+                    </motion.div>
+                  )}
                 </div>
 
-                {ingredients.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="flex flex-wrap gap-2"
-                  >
-                    {ingredients.map((ing) => (
-                      <motion.span
-                        key={ing}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="chip text-sm py-2 flex items-center gap-1.5"
-                      >
-                        {ing}
-                        <button onClick={() => removeIngredient(ing)}>
-                          <X size={14} className="text-muted-foreground hover:text-foreground transition-colors" />
-                        </button>
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                )}
-
+                {/* Generate Button */}
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGenerate}
                   disabled={ingredients.length < 2}
-                  className="btn-primary w-full py-4 text-base font-bold flex items-center justify-center gap-2 disabled:opacity-40 disabled:pointer-events-none"
+                  className="btn-primary w-full py-4 text-base font-bold flex items-center justify-center gap-2.5 disabled:opacity-30 disabled:pointer-events-none"
                 >
-                  <Search size={18} strokeWidth={1.5} /> Generate Recipe
+                  <Sparkles size={18} strokeWidth={1.5} /> Generate Recipe
                 </motion.button>
               </motion.div>
             )}
 
-            {/* Searching Phase */}
+            {/* ─── Searching Phase ─── */}
             {phase === "searching" && (
               <motion.div
                 key="searching"
@@ -267,55 +372,57 @@ export default function Cook() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-center justify-center py-20 space-y-8"
               >
-                {/* Animated scanning orb */}
-                <div className="relative w-32 h-32">
+                <div className="relative w-36 h-36">
+                  {/* Outer rotating ring */}
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 rounded-full border-2 border-transparent"
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 rounded-full"
                     style={{
-                      borderImage: "conic-gradient(from 0deg, hsl(160,84%,39%), transparent 40%) 1",
-                      borderRadius: "50%",
                       border: "2px solid transparent",
-                      background: "conic-gradient(from 0deg, hsl(160,84%,39%), transparent 40%) border-box",
+                      background: "conic-gradient(from 0deg, hsl(160,84%,39%), hsl(171,77%,50%), transparent 50%) border-box",
                       WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
                       WebkitMaskComposite: "xor",
                       maskComposite: "exclude",
                     }}
                   />
+                  {/* Inner pulsing orb */}
                   <motion.div
-                    animate={{ scale: [1, 1.15, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-4 rounded-full bg-primary/10 flex items-center justify-center"
+                    animate={{ scale: [1, 1.12, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-5 rounded-full bg-primary/10 flex items-center justify-center border border-primary/15"
                   >
-                    <CookingPot size={36} className="text-primary" strokeWidth={1.5} />
+                    <ScanSearch size={38} className="text-primary" strokeWidth={1.5} />
                   </motion.div>
+                  {/* Glow */}
                   <motion.div
-                    animate={{ opacity: [0.2, 0.6, 0.2] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    animate={{ opacity: [0.15, 0.5, 0.15] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
                     className="absolute inset-0 rounded-full"
-                    style={{ boxShadow: "0 0 40px rgba(16,185,129,0.3)" }}
+                    style={{ boxShadow: "0 0 50px rgba(16,185,129,0.3)" }}
                   />
                 </div>
 
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={searchMsgIdx}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
+                    exit={{ opacity: 0, y: -12 }}
                     className="text-foreground font-semibold text-lg text-center"
                   >
                     {searchingMessages[searchMsgIdx]}
                   </motion.p>
                 </AnimatePresence>
 
-                <div className="flex gap-1.5">
+                <div className="flex gap-2">
                   {searchingMessages.map((_, i) => (
                     <motion.div
                       key={i}
-                      className={`w-2 h-2 rounded-full ${i <= searchMsgIdx ? "bg-primary" : "bg-white/10"}`}
-                      animate={i <= searchMsgIdx ? { scale: [1, 1.3, 1] } : {}}
+                      className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
+                        i <= searchMsgIdx ? "bg-primary" : "bg-muted"
+                      }`}
+                      animate={i <= searchMsgIdx ? { scale: [1, 1.4, 1] } : {}}
                       transition={{ duration: 0.4 }}
                     />
                   ))}
@@ -323,68 +430,93 @@ export default function Cook() {
               </motion.div>
             )}
 
-            {/* Result Phase */}
+            {/* ─── Result Phase ─── */}
             {phase === "result" && (
               <motion.div
                 key="result"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" as const }}
-                className="space-y-5"
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="space-y-6"
               >
-                <div className="flex items-center gap-2 text-primary">
-                  <Sparkles size={18} strokeWidth={1.5} />
-                  <span className="text-sm font-bold uppercase tracking-wider">Recommended Recipe</span>
+                {/* Badge */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5">
+                    <Sparkles size={14} className="text-primary" strokeWidth={1.5} />
+                    <span className="text-xs font-bold text-primary uppercase tracking-widest">AI Recommendation</span>
+                  </div>
                 </div>
 
-                <div className="glass-card-static p-6 space-y-5 border-primary/15 bg-gradient-to-br from-primary/[0.04] to-teal-400/[0.02]">
-                  <h2 className="text-2xl font-display font-bold text-foreground">{mockRecipe.name}</h2>
+                {/* Recipe Card */}
+                <div className="glass-card-static p-7 lg:p-8 space-y-6 border-primary/10">
+                  <h2 className="text-2xl lg:text-3xl font-display font-bold text-foreground">{mockRecipe.name}</h2>
 
-                  {/* Stats row */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <Timer size={16} strokeWidth={1.5} className="text-primary" /> {mockRecipe.time}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <BarChart3 size={16} strokeWidth={1.5} className="text-primary" /> {mockRecipe.complexity}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Flame size={16} strokeWidth={1.5} className="text-primary" /> {mockRecipe.cal} cal
-                    </span>
+                  {/* Stats */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {[
+                      { icon: Timer, label: mockRecipe.time, color: "text-primary" },
+                      { icon: BarChart3, label: mockRecipe.complexity, color: "text-primary" },
+                      { icon: Flame, label: `${mockRecipe.cal} cal`, color: "text-primary" },
+                    ].map(({ icon: Icon, label, color }) => (
+                      <span
+                        key={label}
+                        className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 rounded-full px-3.5 py-1.5 border border-border"
+                      >
+                        <Icon size={14} strokeWidth={1.5} className={color} /> {label}
+                      </span>
+                    ))}
                   </div>
 
                   {/* Macros */}
-                  <div className="flex gap-3">
-                    <div className="glass-card-static flex-1 text-center py-3 px-2">
-                      <Dumbbell size={16} className="text-primary mx-auto mb-1" strokeWidth={1.5} />
-                      <p className="text-lg font-bold text-foreground">{mockRecipe.protein}g</p>
-                      <p className="text-xs text-muted-foreground">Protein</p>
-                    </div>
-                    <div className="glass-card-static flex-1 text-center py-3 px-2">
-                      <Wheat size={16} className="text-teal-400 mx-auto mb-1" strokeWidth={1.5} />
-                      <p className="text-lg font-bold text-foreground">{mockRecipe.carbs}g</p>
-                      <p className="text-xs text-muted-foreground">Carbs</p>
-                    </div>
-                    <div className="glass-card-static flex-1 text-center py-3 px-2">
-                      <Flame size={16} className="text-amber-400 mx-auto mb-1" strokeWidth={1.5} />
-                      <p className="text-lg font-bold text-foreground">{mockRecipe.fat}g</p>
-                      <p className="text-xs text-muted-foreground">Fat</p>
-                    </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { icon: Dumbbell, value: mockRecipe.protein, label: "Protein", unit: "g", cls: "text-primary" },
+                      { icon: Wheat, value: mockRecipe.carbs, label: "Carbs", unit: "g", cls: "text-secondary" },
+                      { icon: Flame, value: mockRecipe.fat, label: "Fat", unit: "g", cls: "text-accent" },
+                    ].map(({ icon: Icon, value, label, unit, cls }) => (
+                      <div key={label} className="glass-card-static text-center py-4 px-2">
+                        <Icon size={18} className={`${cls} mx-auto mb-1.5`} strokeWidth={1.5} />
+                        <p className="text-xl font-bold text-foreground stat-number">
+                          {value}<span className="text-sm font-normal text-muted-foreground">{unit}</span>
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Ingredients */}
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-foreground">Main Ingredients</p>
-                    <div className="flex flex-wrap gap-2">
-                      {mockRecipe.ingredients.map((ing) => (
-                        <span key={ing} className="chip text-sm py-2">{ing}</span>
+                  {/* Ingredients with availability */}
+                  <div className="space-y-3">
+                    <p className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <Salad size={16} strokeWidth={1.5} className="text-primary" />
+                      Main Ingredients
+                    </p>
+                    <div className="grid gap-2">
+                      {mockRecipe.ingredients.map(({ name, available }) => (
+                        <motion.div
+                          key={name}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="flex items-center justify-between glass-card-static py-3 px-4"
+                          style={{ borderRadius: "14px" }}
+                        >
+                          <span className="text-sm text-foreground font-medium">{name}</span>
+                          {available ? (
+                            <span className="flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 border border-primary/20 rounded-full px-3 py-1">
+                              <Check size={12} strokeWidth={2} /> Available
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1.5 text-xs font-semibold text-accent bg-accent/10 border border-accent/20 rounded-full px-3 py-1">
+                              <ShoppingCart size={12} strokeWidth={2} /> Buy
+                            </span>
+                          )}
+                        </motion.div>
                       ))}
                     </div>
                   </div>
 
                   {/* Steps */}
                   <div className="space-y-3">
-                    <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                    <p className="text-sm font-bold text-foreground flex items-center gap-2">
                       <ListOrdered size={16} strokeWidth={1.5} className="text-primary" /> Steps
                     </p>
                     <div className="space-y-3">
@@ -393,7 +525,7 @@ export default function Cook() {
                           key={i}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.1 * i, duration: 0.4 }}
+                          transition={{ delay: 0.08 * i, duration: 0.4 }}
                           className="flex gap-3"
                         >
                           <span className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 text-xs font-bold border border-primary/20">
@@ -406,21 +538,28 @@ export default function Cook() {
                   </div>
                 </div>
 
-                {/* Action buttons */}
-                <div className="flex gap-3">
+                {/* Action Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <motion.button
                     whileTap={{ scale: 0.97 }}
-                    onClick={handleReset}
-                    className="btn-secondary flex-1 py-4 text-base font-semibold flex items-center justify-center gap-2"
+                    onClick={handleNewMealSameIngredients}
+                    className="btn-secondary py-4 text-sm font-semibold flex items-center justify-center gap-2"
                   >
-                    <RefreshCw size={18} strokeWidth={1.5} /> Another Recipe
+                    <RefreshCw size={16} strokeWidth={1.5} /> New Meal
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleAddNewIngredients}
+                    className="btn-secondary py-4 text-sm font-semibold flex items-center justify-center gap-2"
+                  >
+                    <PackagePlus size={16} strokeWidth={1.5} /> Add Ingredients
                   </motion.button>
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={handleCookIt}
-                    className="btn-primary flex-1 py-4 text-base font-bold flex items-center justify-center gap-2"
+                    className="btn-primary py-4 text-sm font-bold flex items-center justify-center gap-2"
                   >
-                    <UtensilsCrossed size={18} strokeWidth={1.5} /> I'm Cooking It!
+                    <UtensilsCrossed size={16} strokeWidth={1.5} /> I'm Cooking It!
                   </motion.button>
                 </div>
               </motion.div>
