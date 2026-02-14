@@ -32,11 +32,14 @@ export default function Profile() {
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             <button onClick={() => navigate("/dashboard")} className="btn-ghost p-2"><ChevronLeft size={22} /></button>
-            <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2"><Settings size={24} /> Profile & Settings</h1>
+            <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2">
+              <div className="icon-box-sm"><Settings size={20} className="text-primary" strokeWidth={1.5} /></div>
+              Profile & Settings
+            </h1>
           </motion.div>
 
           <motion.div variants={fadeUp} className="glass-card-static flex items-center gap-5 p-6 lg:p-8">
-            <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-2xl font-bold text-foreground shrink-0 shadow-lg shadow-primary/20">
+            <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-2xl font-bold text-foreground shrink-0 shadow-lg shadow-primary/15">
               A
             </div>
             <div className="flex-1 min-w-0">
@@ -44,14 +47,14 @@ export default function Profile() {
               <p className="text-sm text-muted-foreground">demo@nutriai.com</p>
               <p className="text-sm text-muted-foreground">Member since Dec 2024</p>
             </div>
-            <button className="btn-ghost p-2"><Edit size={18} /></button>
+            <button className="btn-ghost p-2"><Edit size={18} strokeWidth={1.5} /></button>
           </motion.div>
 
           <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {healthStats.map((s, i) => (
               <div key={i} className="glass-card text-center space-y-2 p-4 lg:p-5">
-                <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center mx-auto">
-                  <s.icon size={20} className="text-muted-foreground" />
+                <div className="icon-box-sm mx-auto">
+                  <s.icon size={18} className="text-primary" strokeWidth={1.5} />
                 </div>
                 <p className="text-xs text-muted-foreground font-medium">{s.label}</p>
                 <p className={`text-2xl font-bold font-display ${s.color}`}>{s.value}</p>
@@ -68,7 +71,7 @@ export default function Profile() {
                 { label: "Allergies", value: "Dairy, Shellfish" },
                 { label: "Cuisines", value: "Pakistani, Indian, Chinese" },
               ].map((p, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b border-white/[0.04] last:border-0">
+                <div key={i} className="flex justify-between items-center py-2 border-b border-white/[0.03] last:border-0">
                   <span className="text-sm text-muted-foreground">{p.label}</span>
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-foreground font-medium">{p.value}</span>
@@ -79,10 +82,10 @@ export default function Profile() {
             </motion.div>
 
             <motion.div variants={fadeUp} className="glass-card-static space-y-3 p-5 lg:p-6">
-              <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2"><TrendingUp size={16} /> Your Journey</h3>
+              <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2"><TrendingUp size={16} strokeWidth={1.5} /> Your Journey</h3>
               {journeyStats.map((s, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b border-white/[0.04] last:border-0">
-                  <span className="text-sm text-muted-foreground flex items-center gap-2"><s.icon size={14} /> {s.label}</span>
+                <div key={i} className="flex justify-between items-center py-2 border-b border-white/[0.03] last:border-0">
+                  <span className="text-sm text-muted-foreground flex items-center gap-2"><s.icon size={14} strokeWidth={1.5} /> {s.label}</span>
                   <span className="text-sm text-foreground font-semibold">{s.value}</span>
                 </div>
               ))}
@@ -105,19 +108,19 @@ export default function Profile() {
 
           <motion.div variants={fadeUp} className="space-y-3">
             <motion.button whileTap={{ scale: 0.98 }} className="btn-secondary w-full py-3.5 text-sm flex items-center justify-center gap-2 font-medium">
-              <Download size={18} /> Export My Data
+              <Download size={18} strokeWidth={1.5} /> Export My Data
             </motion.button>
-            <motion.button whileTap={{ scale: 0.98 }} className="btn-secondary w-full py-3.5 text-sm flex items-center justify-center gap-2 text-destructive border-destructive/20 font-medium">
-              <Trash2 size={18} /> Delete Account
+            <motion.button whileTap={{ scale: 0.98 }} className="btn-secondary w-full py-3.5 text-sm flex items-center justify-center gap-2 text-destructive border-destructive/15 font-medium">
+              <Trash2 size={18} strokeWidth={1.5} /> Delete Account
             </motion.button>
             <motion.button whileTap={{ scale: 0.98 }} onClick={() => navigate("/")} className="btn-secondary w-full py-3.5 text-sm flex items-center justify-center gap-2 font-medium">
-              <LogOut size={18} /> Sign Out
+              <LogOut size={18} strokeWidth={1.5} /> Sign Out
             </motion.button>
           </motion.div>
 
           <motion.div variants={fadeUp} className="text-center space-y-1 py-6">
-            <p className="text-sm text-muted-foreground/60">NutriAI v1.0</p>
-            <p className="text-sm text-muted-foreground/40">Made with ❤️ for Hackathon 2024</p>
+            <p className="text-sm text-muted-foreground/50">NutriAI v1.0</p>
+            <p className="text-sm text-muted-foreground/30">Made with care for Hackathon 2024</p>
           </motion.div>
         </motion.div>
       </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, Camera, Plus, Search, BrainCircuit, AlertTriangle, CheckCircle2, Warehouse, UtensilsCrossed, CalendarDays, Egg, Milk, Beef, Apple, Carrot, Wheat } from "lucide-react";
+import { ChevronLeft, Camera, Plus, Search, BrainCircuit, AlertTriangle, CheckCircle2, Warehouse, UtensilsCrossed, CalendarDays, Egg, Milk, Beef, Apple, Carrot, Wheat, Package } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -24,7 +24,19 @@ const fresh = [
   { icon: Apple, name: "Onions", qty: "×5", days: "14 days" },
 ];
 
-const pantry = ["Rice 2kg", "Lentils 1kg", "Flour 1kg", "Cooking Oil 1L", "Cumin", "Turmeric", "Chili powder", "Garam masala", "Chickpeas ×2", "Tomato paste ×3"];
+const pantry = [
+  { name: "Rice", qty: "2kg", icon: Wheat },
+  { name: "Lentils", qty: "1kg", icon: Package },
+  { name: "Flour", qty: "1kg", icon: Wheat },
+  { name: "Cooking Oil", qty: "1L", icon: Package },
+  { name: "Cumin", qty: "50g", icon: Package },
+  { name: "Turmeric", qty: "50g", icon: Package },
+  { name: "Chili Powder", qty: "50g", icon: Package },
+  { name: "Garam Masala", qty: "50g", icon: Package },
+  { name: "Chickpeas", qty: "×2 cans", icon: Package },
+  { name: "Tomato Paste", qty: "×3 cans", icon: Package },
+];
+
 const filters = ["All", "Protein", "Veggies", "Dairy", "Grains"];
 
 export default function FoodStore() {
@@ -38,7 +50,10 @@ export default function FoodStore() {
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             <button onClick={() => navigate("/dashboard")} className="btn-ghost p-2"><ChevronLeft size={22} /></button>
-            <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2"><Warehouse size={24} /> My Food Store</h1>
+            <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2">
+              <div className="icon-box-sm"><Warehouse size={20} className="text-primary" strokeWidth={1.5} /></div>
+              My Food Store
+            </h1>
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -72,8 +87,8 @@ export default function FoodStore() {
                   transition={{ delay: 0.2 + i * 0.08 }}
                   className="glass-card min-w-[160px] border-accent/20 space-y-2.5 p-5"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-                    <item.icon size={20} className="text-muted-foreground" />
+                  <div className="icon-box-sm">
+                    <item.icon size={20} className="text-primary" strokeWidth={1.5} />
                   </div>
                   <p className="text-base font-bold text-foreground">{item.name}</p>
                   <p className="text-sm text-muted-foreground">{item.qty}</p>
@@ -89,8 +104,8 @@ export default function FoodStore() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {fresh.map((item, i) => (
                 <motion.div key={i} variants={fadeUp} className="glass-card text-center space-y-2 p-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto">
-                    <item.icon size={20} className="text-muted-foreground" />
+                  <div className="icon-box-sm mx-auto">
+                    <item.icon size={20} className="text-primary" strokeWidth={1.5} />
                   </div>
                   <p className="text-sm font-semibold text-foreground">{item.name}</p>
                   <p className="text-xs text-muted-foreground">{item.qty}</p>
@@ -100,20 +115,32 @@ export default function FoodStore() {
             </div>
           </motion.div>
 
+          {/* Pantry — individual cards */}
           <motion.div variants={fadeUp} className="space-y-3">
             <h2 className="text-base font-bold text-foreground flex items-center gap-2"><Wheat size={18} /> Pantry</h2>
-            <div className="glass-card-static p-5">
-              <div className="flex flex-wrap gap-2">
-                {pantry.map((item, i) => (
-                  <span key={i} className="chip text-sm py-2">{item}</span>
-                ))}
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {pantry.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04 }}
+                  className="glass-card text-center space-y-2 p-4"
+                >
+                  <div className="icon-box-sm mx-auto">
+                    <item.icon size={18} className="text-muted-foreground" strokeWidth={1.5} />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">{item.qty}</p>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
           <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.04] to-teal-400/[0.03] flex items-start gap-4 p-5">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <BrainCircuit className="text-primary" size={20} />
+            <div className="icon-box">
+              <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
             </div>
             <div className="space-y-3 flex-1">
               <p className="text-sm text-foreground leading-relaxed">
