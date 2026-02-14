@@ -10,8 +10,8 @@ import FeedbackModal from "@/components/FeedbackModal";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 function CountUp({ target, duration = 1500 }: { target: number; duration?: number }) {
@@ -34,7 +34,7 @@ function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number 
   const circ = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} className="transform -rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.03)" strokeWidth={strokeWidth} fill="none" />
+      <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.02)" strokeWidth={strokeWidth} fill="none" />
       <motion.circle
         cx={size / 2} cy={size / 2} r={r} stroke="url(#ringGrad)" strokeWidth={strokeWidth} fill="none"
         strokeLinecap="round"
@@ -61,7 +61,7 @@ function MacroBar({ label, icon: Icon, current, target, color }: { label: string
         <span className="text-muted-foreground flex items-center gap-1.5"><Icon size={14} strokeWidth={1.5} />{label}</span>
         <span className="text-foreground font-semibold">{current}g / {target}g</span>
       </div>
-      <div className="h-3 rounded-full bg-white/[0.03] overflow-hidden">
+      <div className="h-3 rounded-full bg-muted/20 overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${color}`}
           initial={{ width: 0 }}
@@ -81,10 +81,10 @@ const todayMeals = [
 ];
 
 const quickActions = [
-  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/8 to-teal-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.12)]" },
-  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/8 to-cyan-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.12)]" },
-  { icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/8 to-orange-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.12)]" },
-  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/8 to-pink-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.12)]" },
+  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/6 to-teal-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.1)]" },
+  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/6 to-cyan-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.1)]" },
+  { icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/6 to-orange-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.1)]" },
+  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/6 to-pink-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.1)]" },
 ];
 
 export default function Dashboard() {
@@ -102,20 +102,33 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-6xl mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7 lg:space-y-10">
+      <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-6xl mx-auto relative">
+        {/* Subtle background blob */}
+        <motion.div
+          animate={{ opacity: [0.01, 0.03, 0.01], scale: [1, 1.1, 1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary rounded-full blur-[150px] pointer-events-none"
+        />
+
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7 lg:space-y-10 relative z-10">
           {/* Greeting */}
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground tracking-tight">{greeting}, Ahmed</h1>
               <p className="text-sm text-muted-foreground mt-1">Let's check your nutrition today</p>
             </div>
-            <Link to="/profile" className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base font-bold text-foreground shadow-lg shadow-primary/20">
-              A
+            <Link to="/profile">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base font-bold text-foreground shadow-lg shadow-primary/15"
+              >
+                A
+              </motion.div>
             </Link>
           </motion.div>
 
-          {/* Progress (full width on top) */}
+          {/* Progress */}
           <motion.div variants={fadeUp} className="glass-card-static p-6 lg:p-8">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-5">Today's Progress</h2>
             <div className="lg:flex lg:items-center lg:gap-10">
@@ -152,6 +165,7 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + i * 0.08, duration: 0.4 }}
+                  whileHover={{ y: -2 }}
                   className="glass-card flex items-center gap-4 py-4 px-5"
                 >
                   <div className="icon-box-sm">
@@ -198,14 +212,14 @@ export default function Dashboard() {
               {quickActions.map((a, i) => (
                 <motion.button
                   key={i}
-                  whileHover={{ scale: 1.03, y: -3 }}
+                  whileHover={{ scale: 1.03, y: -4 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(a.to)}
                   className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}
                 >
-                  <div className="icon-box">
+                  <motion.div whileHover={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 0.5 }} className="icon-box">
                     <a.icon size={22} className="text-primary" strokeWidth={1.5} />
-                  </div>
+                  </motion.div>
                   <p className="text-base font-bold text-foreground">{a.title}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{a.sub}</p>
                 </motion.button>
@@ -214,18 +228,27 @@ export default function Dashboard() {
           </motion.div>
 
           {/* AI Insight */}
-          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.04] to-teal-400/[0.03] flex items-start gap-4 p-5 lg:p-6">
-            <div className="icon-box">
-              <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm lg:text-base text-foreground leading-relaxed">
-                Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both and fits your calorie budget perfectly.
-              </p>
-              <button onClick={() => navigate("/cook")} className="btn-ghost text-sm mt-3 flex items-center gap-1.5 p-0">
-                Show Recipe <ChevronRight size={16} />
-              </button>
-            </div>
+          <motion.div variants={fadeUp}>
+            <motion.div
+              whileHover={{ y: -2 }}
+              className="glass-card-static bg-gradient-to-r from-primary/[0.03] to-secondary/[0.02] flex items-start gap-4 p-5 lg:p-6"
+            >
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="icon-box"
+              >
+                <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
+              </motion.div>
+              <div className="flex-1">
+                <p className="text-sm lg:text-base text-foreground leading-relaxed">
+                  Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both and fits your calorie budget perfectly.
+                </p>
+                <button onClick={() => navigate("/cook")} className="btn-ghost text-sm mt-3 flex items-center gap-1.5 p-0">
+                  Show Recipe <ChevronRight size={16} />
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
