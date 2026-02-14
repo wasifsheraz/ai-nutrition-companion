@@ -1,11 +1,12 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle2 } from "lucide-react";
+import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle2, ChefHat } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Home" },
   { to: "/snap", icon: ScanLine, label: "Snap" },
   { to: "/food-store", icon: Warehouse, label: "Store" },
+  { to: "/cook", icon: ChefHat, label: "Cook" },
   { to: "/meal-plan", icon: CalendarDays, label: "Plan" },
   { to: "/nutrients-report", icon: BarChart3, label: "Report" },
 ];
