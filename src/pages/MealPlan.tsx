@@ -335,7 +335,6 @@ export default function MealPlan() {
                               <span className="flex items-center gap-1"><Clock size={13} strokeWidth={1.5} /> {meal.time}</span>
                             </div>
                             <div className="flex gap-3 pt-1">
-                              <button className="btn-ghost text-sm p-0">View Recipe</button>
                               <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={() => toggleCooked(key)}
