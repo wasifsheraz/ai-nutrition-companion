@@ -74,7 +74,7 @@ export default function Landing() {
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => navigate("/auth")}
+onClick={() => navigate("/sign-up")}
               className="btn-primary px-6 py-2.5 text-sm font-bold"
             >
               Get Started
@@ -89,7 +89,7 @@ export default function Landing() {
             <a href="#features" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">Features</a>
             <a href="#how-it-works" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">How It Works</a>
             <a href="#testimonials" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">Reviews</a>
-            <button onClick={() => navigate("/auth")} className="btn-primary w-full py-3 text-sm font-bold">Get Started</button>
+            <button onClick={() => navigate("/sign-up")} className="btn-primary w-full py-3 text-sm font-bold">Get Started</button>
           </motion.div>
         )}
       </nav>
@@ -124,7 +124,7 @@ export default function Landing() {
               <motion.button
                 whileHover={{ scale: 1.04, y: -3 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => navigate("/auth")}
+onClick={() => navigate("/sign-up")}
                 className="btn-primary px-12 py-5 text-lg font-bold animate-pulse-glow rounded-2xl"
               >
                 Get Started Free <ArrowRight className="inline ml-2" size={22} />
@@ -266,7 +266,7 @@ export default function Landing() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/auth")}
+onClick={() => navigate("/sign-up")}
             className="btn-primary px-10 py-4 text-base font-bold"
           >
             Get Started <ArrowRight className="inline ml-2" size={20} />
