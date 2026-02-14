@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle2, ChefHat } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const navItems = [
   { to: "/dashboard", icon: Home, label: "Home" },
@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[80px] fixed left-0 top-0 h-full z-40 items-center py-8 gap-2 border-r border-border/50 bg-background/90 backdrop-blur-2xl">
+      <aside className="hidden lg:flex flex-col w-[80px] fixed left-0 top-0 h-full z-40 items-center py-8 gap-2 border-r border-white/[0.04] bg-background/80 backdrop-blur-2xl">
         <div className="gradient-text font-display font-bold text-2xl mb-8 tracking-tight">N</div>
         {sidebarItems.map((item) => {
           const active = location.pathname === item.to;
@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {active && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute inset-0 rounded-xl bg-primary/6 border border-primary/12"
+                  className="absolute inset-0 rounded-xl bg-primary/8 border border-primary/15"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
@@ -49,21 +49,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-[80px] pb-[92px] lg:pb-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          {children}
+        </motion.div>
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/90 backdrop-blur-2xl">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.04] bg-background/80 backdrop-blur-2xl">
         <div className="flex justify-around items-center px-2 py-2 safe-area-bottom">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
