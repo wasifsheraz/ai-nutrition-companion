@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle } from "lucide-react";
+import { Home, ScanLine, Warehouse, CalendarDays, BarChart3, UserCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { to: "/nutrients-report", icon: BarChart3, label: "Report" },
 ];
 
-const sidebarItems = [...navItems, { to: "/profile", icon: UserCircle, label: "Profile" }];
+const sidebarItems = [...navItems, { to: "/profile", icon: UserCircle2, label: "Profile" }];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -18,8 +18,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[80px] fixed left-0 top-0 h-full z-40 items-center py-8 gap-2 border-r border-white/[0.06] bg-background/80 backdrop-blur-2xl">
-        <div className="gradient-text font-display font-bold text-2xl mb-8">N</div>
+      <aside className="hidden lg:flex flex-col w-[80px] fixed left-0 top-0 h-full z-40 items-center py-8 gap-2 border-r border-white/[0.04] bg-background/80 backdrop-blur-2xl">
+        <div className="gradient-text font-display font-bold text-2xl mb-8 tracking-tight">N</div>
         {sidebarItems.map((item) => {
           const active = location.pathname === item.to;
           return (
@@ -35,11 +35,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {active && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute inset-0 rounded-xl bg-primary/10 border border-primary/20"
+                  className="absolute inset-0 rounded-xl bg-primary/8 border border-primary/15"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <item.icon size={22} className="relative z-10" />
+              <item.icon size={22} strokeWidth={active ? 2 : 1.5} className="relative z-10" />
               <span className="text-[10px] font-semibold relative z-10">{item.label}</span>
             </NavLink>
           );
@@ -59,7 +59,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] bg-background/80 backdrop-blur-2xl">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.04] bg-background/80 backdrop-blur-2xl">
         <div className="flex justify-around items-center px-2 py-2 safe-area-bottom">
           {navItems.map((item) => {
             const active = location.pathname === item.to;
@@ -78,7 +78,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
-                <item.icon size={24} strokeWidth={active ? 2.5 : 1.8} />
+                <item.icon size={24} strokeWidth={active ? 2 : 1.5} />
                 <span className="text-[11px] font-semibold">{item.label}</span>
               </NavLink>
             );

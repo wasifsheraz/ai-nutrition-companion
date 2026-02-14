@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
-import { Camera, Warehouse, Flame, CalendarDays, Plus, Star, BrainCircuit, ChevronRight, UtensilsCrossed, ScanLine, Clock, Sparkles } from "lucide-react";
+import { Camera, Warehouse, Flame, CalendarDays, Plus, Star, BrainCircuit, ChevronRight, UtensilsCrossed, ScanLine, Clock, Sparkles, Dumbbell, Droplets } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
@@ -30,7 +30,7 @@ function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number 
   const circ = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} className="transform -rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.04)" strokeWidth={strokeWidth} fill="none" />
+      <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.03)" strokeWidth={strokeWidth} fill="none" />
       <motion.circle
         cx={size / 2} cy={size / 2} r={r} stroke="url(#ringGrad)" strokeWidth={strokeWidth} fill="none"
         strokeLinecap="round"
@@ -54,10 +54,10 @@ function MacroBar({ label, icon: Icon, current, target, color }: { label: string
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground flex items-center gap-1.5"><Icon size={14} />{label}</span>
+        <span className="text-muted-foreground flex items-center gap-1.5"><Icon size={14} strokeWidth={1.5} />{label}</span>
         <span className="text-foreground font-semibold">{current}g / {target}g</span>
       </div>
-      <div className="h-3 rounded-full bg-white/[0.04] overflow-hidden">
+      <div className="h-3 rounded-full bg-white/[0.03] overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${color}`}
           initial={{ width: 0 }}
@@ -77,10 +77,10 @@ const meals = [
 ];
 
 const quickActions = [
-  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/10 to-teal-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]" },
-  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/10 to-cyan-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.15)]" },
-  { icon: UtensilsCrossed, title: "Cook Now", sub: "4 recipes from fridge", to: "/cook", gradient: "from-amber-500/10 to-orange-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]" },
-  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/10 to-pink-500/10", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.15)]" },
+  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/8 to-teal-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.12)]" },
+  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/8 to-cyan-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.12)]" },
+  { icon: UtensilsCrossed, title: "Cook Now", sub: "4 recipes from fridge", to: "/cook", gradient: "from-amber-500/8 to-orange-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.12)]" },
+  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/8 to-pink-500/8", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.12)]" },
 ];
 
 export default function Dashboard() {
@@ -92,10 +92,9 @@ export default function Dashboard() {
     <AppLayout>
       <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-6xl mx-auto">
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7 lg:space-y-10">
-          {/* Header */}
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">{greeting}, Ahmed</h1>
+              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground tracking-tight">{greeting}, Ahmed</h1>
               <p className="text-sm text-muted-foreground mt-1">Let's check your nutrition today</p>
             </div>
             <Link to="/profile" className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base font-bold text-foreground shadow-lg shadow-primary/20">
@@ -103,9 +102,7 @@ export default function Dashboard() {
             </Link>
           </motion.div>
 
-          {/* Desktop: Progress + Meals side by side */}
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 space-y-6 lg:space-y-0">
-            {/* Progress Card */}
             <motion.div variants={fadeUp} className="glass-card-static p-6 lg:p-8 space-y-6">
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Today's Progress</h2>
               <div className="flex flex-col items-center">
@@ -126,13 +123,12 @@ export default function Dashboard() {
                 </motion.p>
               </div>
               <div className="space-y-4">
-                <MacroBar label="Protein" icon={Flame} current={78} target={90} color="bg-primary" />
+                <MacroBar label="Protein" icon={Dumbbell} current={78} target={90} color="bg-primary" />
                 <MacroBar label="Carbs" icon={Sparkles} current={145} target={200} color="bg-teal-400" />
-                <MacroBar label="Fat" icon={Flame} current={42} target={60} color="bg-cyan-400" />
+                <MacroBar label="Fat" icon={Droplets} current={42} target={60} color="bg-cyan-400" />
               </div>
             </motion.div>
 
-            {/* Meals */}
             <motion.div variants={fadeUp} className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-display font-semibold text-foreground">Today's Meals</h2>
@@ -149,8 +145,8 @@ export default function Dashboard() {
                     className="glass-card flex items-center gap-4 py-4 px-5"
                   >
                     <div className="absolute -left-[5px] w-3.5 h-3.5 rounded-full bg-primary border-2 border-background shadow-sm shadow-primary/30" />
-                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
-                      <m.icon size={20} className="text-muted-foreground" />
+                    <div className="icon-box-sm">
+                      <m.icon size={20} className="text-primary" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate">{m.name}</p>
@@ -174,7 +170,6 @@ export default function Dashboard() {
             </motion.div>
           </div>
 
-          {/* Quick Actions */}
           <motion.div variants={fadeUp} className="space-y-4">
             <h2 className="text-lg font-display font-semibold text-foreground">Quick Actions</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -186,8 +181,8 @@ export default function Dashboard() {
                   onClick={() => navigate(a.to)}
                   className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center">
-                    <a.icon size={24} className="text-foreground" />
+                  <div className="icon-box">
+                    <a.icon size={22} className="text-primary" strokeWidth={1.5} />
                   </div>
                   <p className="text-base font-bold text-foreground">{a.title}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{a.sub}</p>
@@ -196,10 +191,9 @@ export default function Dashboard() {
             </div>
           </motion.div>
 
-          {/* AI Insight */}
-          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.06] to-teal-400/[0.04] flex items-start gap-4 p-5 lg:p-6">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <BrainCircuit className="text-primary" size={20} />
+          <motion.div variants={fadeUp} className="glass-card-static bg-gradient-to-r from-primary/[0.04] to-teal-400/[0.03] flex items-start gap-4 p-5 lg:p-6">
+            <div className="icon-box">
+              <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
             </div>
             <div className="flex-1">
               <p className="text-sm lg:text-base text-foreground leading-relaxed">

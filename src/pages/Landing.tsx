@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
-import { Star, ArrowRight, ScanLine, Refrigerator, CalendarRange, UserCircle, Camera, BrainCircuit, BarChart3, Trophy, Menu, X } from "lucide-react";
+import { Star, ArrowRight, ScanLine, Refrigerator, CalendarRange, UserCircle2, Camera, BrainCircuit, BarChart3, Trophy, Menu, X, Target, Heart, Recycle, Sparkles } from "lucide-react";
 
 const features = [
   { icon: ScanLine, title: "Snap & Know", desc: "Take a photo of any food — get instant AI nutrition analysis with detailed macros and health scores." },
@@ -10,10 +10,10 @@ const features = [
 ];
 
 const steps = [
-  { num: 1, title: "Set Up Profile", icon: UserCircle },
-  { num: 2, title: "Scan Kitchen", icon: Camera },
-  { num: 3, title: "Get AI Recs", icon: BrainCircuit },
-  { num: 4, title: "Track & Win", icon: Trophy },
+  { num: 1, title: "Set Up Profile", desc: "Tell us about your health goals and dietary needs", icon: UserCircle2 },
+  { num: 2, title: "Scan Kitchen", desc: "Photograph your fridge and pantry items", icon: Camera },
+  { num: 3, title: "Get AI Recs", desc: "Receive personalized meal suggestions instantly", icon: BrainCircuit },
+  { num: 4, title: "Track & Win", desc: "Monitor progress and earn achievement badges", icon: Trophy },
 ];
 
 const testimonials = [
@@ -64,9 +64,9 @@ export default function Landing() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-background/70 backdrop-blur-2xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.04] bg-background/60 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-16 lg:h-20">
-          <Link to="/" className="gradient-text-shimmer font-display font-bold text-2xl lg:text-3xl">NutriAI</Link>
+          <Link to="/" className="gradient-text-shimmer font-display font-bold text-2xl lg:text-3xl tracking-tight">NutriAI</Link>
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">Features</a>
             <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">How It Works</a>
@@ -85,7 +85,7 @@ export default function Landing() {
           </button>
         </div>
         {mobileMenu && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="md:hidden border-t border-white/[0.06] bg-background/95 backdrop-blur-2xl px-6 py-5 space-y-4">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="md:hidden border-t border-white/[0.04] bg-background/95 backdrop-blur-2xl px-6 py-5 space-y-4">
             <a href="#features" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">Features</a>
             <a href="#how-it-works" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">How It Works</a>
             <a href="#testimonials" onClick={() => setMobileMenu(false)} className="block text-base text-muted-foreground font-medium">Reviews</a>
@@ -96,25 +96,28 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 pt-20 overflow-hidden">
-        {/* Ambient glows */}
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/[0.05] rounded-full blur-[150px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-teal-400/[0.04] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/[0.04] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-teal-400/[0.03] rounded-full blur-[120px] pointer-events-none" />
 
         <motion.div
           style={{ opacity: heroOpacity, scale: heroScale }}
           className="text-center z-10 max-w-3xl mx-auto"
         >
           <motion.div variants={stagger} initial="hidden" animate="show">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 chip mb-8 text-sm py-2.5 px-5">
+              <Sparkles size={16} className="text-primary" />
+              AI-Powered Nutrition
+            </motion.div>
             <motion.h1
               variants={fadeUp}
-              className="text-6xl md:text-8xl lg:text-9xl font-display font-bold gradient-text-shimmer mb-6 leading-[1.05]"
+              className="text-6xl md:text-8xl lg:text-9xl font-display font-bold gradient-text-shimmer mb-6 leading-[1.05] tracking-tight"
             >
               NutriAI
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-xl md:text-2xl lg:text-3xl text-muted-foreground mb-3 font-medium">
+            <motion.p variants={fadeUp} className="text-xl md:text-2xl lg:text-3xl text-muted-foreground mb-4 font-medium">
               Your AI-Powered Personal Nutritionist
             </motion.p>
-            <motion.p variants={fadeUp} className="text-base md:text-lg text-muted-foreground/60 mb-12 max-w-lg mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base md:text-lg text-muted-foreground/50 mb-12 max-w-lg mx-auto leading-relaxed">
               Snap food. Scan your fridge. Get personalized meal plans — all powered by artificial intelligence.
             </motion.p>
             <motion.div variants={fadeUp}>
@@ -126,7 +129,7 @@ export default function Landing() {
               >
                 Get Started Free <ArrowRight className="inline ml-2" size={22} />
               </motion.button>
-              <p className="text-sm text-muted-foreground/40 mt-5 tracking-wide">
+              <p className="text-sm text-muted-foreground/30 mt-5 tracking-wide">
                 No credit card required • 100% free
               </p>
             </motion.div>
@@ -161,7 +164,7 @@ export default function Landing() {
           viewport={{ once: true }}
           className="text-center mb-14 lg:mb-20"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4 tracking-tight">
             Everything You Need to Eat Smart
           </h2>
           <div className="w-16 h-1.5 bg-primary rounded-full mx-auto" />
@@ -176,8 +179,8 @@ export default function Landing() {
               transition={{ delay: i * 0.15, duration: 0.6 }}
               className="glass-card text-center space-y-5 p-8 lg:p-10"
             >
-              <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                <f.icon size={32} className="text-primary" />
+              <div className="icon-box-lg mx-auto">
+                <f.icon size={28} className="text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-foreground">{f.title}</h3>
               <p className="text-sm lg:text-base text-muted-foreground leading-relaxed">{f.desc}</p>
@@ -186,26 +189,34 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="px-6 py-20 lg:py-28 max-w-5xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-14 lg:mb-20">How It Works</h2>
+      {/* How It Works — single row with scroll reveal */}
+      <section id="how-it-works" className="px-6 py-20 lg:py-28 max-w-6xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-16 lg:mb-20 tracking-tight"
+        >
+          How It Works
+        </motion.h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-10">
           {steps.map((s, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.2, duration: 0.6, ease: "easeOut" as const }}
               className="text-center space-y-4"
             >
               <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-xl lg:text-2xl font-bold text-foreground mx-auto shadow-lg shadow-primary/25">
                 {s.num}
               </div>
-              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto">
-                <s.icon size={24} className="text-muted-foreground" />
+              <div className="icon-box mx-auto">
+                <s.icon size={22} className="text-primary" strokeWidth={1.5} />
               </div>
               <p className="text-sm lg:text-base font-semibold text-foreground leading-tight">{s.title}</p>
+              <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -213,7 +224,7 @@ export default function Landing() {
 
       {/* Testimonials */}
       <section id="testimonials" className="px-6 py-20 lg:py-28 max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-3">Trusted by Thousands</h2>
+        <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-3 tracking-tight">Trusted by Thousands</h2>
         <p className="text-base text-muted-foreground text-center mb-12 lg:mb-16">Students, fitness enthusiasts, and busy families</p>
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {testimonials.map((t, i) => (
@@ -255,9 +266,9 @@ export default function Landing() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto glass-card-static text-center bg-gradient-to-r from-primary/[0.08] to-teal-400/[0.06] py-14 lg:py-20 px-8"
+          className="max-w-5xl mx-auto glass-card-static text-center bg-gradient-to-r from-primary/[0.06] to-teal-400/[0.04] py-14 lg:py-20 px-8"
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-foreground mb-8">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-foreground mb-8 tracking-tight">
             Start Your Nutrition Journey Today
           </h2>
           <motion.button
@@ -272,13 +283,10 @@ export default function Landing() {
       </section>
 
       <footer className="px-6 py-10 text-center border-t border-white/[0.04]">
-        <p className="text-sm text-muted-foreground/50">
-          Built with ❤️ for healthier lives • Made for Hackathon 2024
+        <p className="text-sm text-muted-foreground/40">
+          Built with care for healthier lives • Made for Hackathon 2024
         </p>
       </footer>
     </div>
   );
 }
-
-// Icons used in SDG section that need importing
-import { Target, Heart, Recycle } from "lucide-react";
