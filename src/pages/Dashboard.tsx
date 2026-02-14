@@ -10,8 +10,8 @@ import FeedbackModal from "@/components/FeedbackModal";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 function CountUp({ target, duration = 1500 }: { target: number; duration?: number }) {
@@ -28,13 +28,13 @@ function CountUp({ target, duration = 1500 }: { target: number; duration?: numbe
   return <span className="stat-number">{val.toLocaleString()}</span>;
 }
 
-function AnimatedRing({ percent, size = 160 }: { percent: number; size?: number }) {
-  const strokeWidth = 10;
+function AnimatedRing({ percent, size = 200 }: { percent: number; size?: number }) {
+  const strokeWidth = 12;
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} className="transform -rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} stroke="hsl(var(--muted))" strokeWidth={strokeWidth} fill="none" opacity={0.3} />
+      <circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.02)" strokeWidth={strokeWidth} fill="none" />
       <motion.circle
         cx={size / 2} cy={size / 2} r={r} stroke="url(#ringGrad)" strokeWidth={strokeWidth} fill="none"
         strokeLinecap="round"
@@ -45,8 +45,8 @@ function AnimatedRing({ percent, size = 160 }: { percent: number; size?: number 
       />
       <defs>
         <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="hsl(217, 91%, 60%)" />
-          <stop offset="100%" stopColor="hsl(199, 89%, 48%)" />
+          <stop offset="0%" stopColor="hsl(160, 84%, 39%)" />
+          <stop offset="100%" stopColor="hsl(171, 77%, 50%)" />
         </linearGradient>
       </defs>
     </svg>
@@ -56,12 +56,12 @@ function AnimatedRing({ percent, size = 160 }: { percent: number; size?: number 
 function MacroBar({ label, icon: Icon, current, target, color }: { label: string; icon: React.ElementType; current: number; target: number; color: string }) {
   const pct = Math.min((current / target) * 100, 100);
   return (
-    <div className="space-y-1.5">
-      <div className="flex justify-between text-xs">
-        <span className="text-muted-foreground flex items-center gap-1"><Icon size={12} strokeWidth={1.5} />{label}</span>
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm">
+        <span className="text-muted-foreground flex items-center gap-1.5"><Icon size={14} strokeWidth={1.5} />{label}</span>
         <span className="text-foreground font-semibold">{current}g / {target}g</span>
       </div>
-      <div className="h-2 rounded-full bg-muted/30 overflow-hidden">
+      <div className="h-3 rounded-full bg-muted/20 overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${color}`}
           initial={{ width: 0 }}
@@ -81,10 +81,10 @@ const todayMeals = [
 ];
 
 const quickActions = [
-  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-blue-500/6 to-sky-500/6" },
-  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-sky-500/6 to-cyan-500/6" },
-  { icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/6 to-orange-500/6" },
-  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-indigo-500/6 to-purple-500/6" },
+  { icon: ScanLine, title: "Snap & Know", sub: "Scan any food instantly", to: "/snap", gradient: "from-emerald-500/6 to-teal-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.1)]" },
+  { icon: Warehouse, title: "Food Store", sub: "23 items · 3 expiring", to: "/food-store", gradient: "from-teal-500/6 to-cyan-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(45,212,191,0.1)]" },
+  { icon: UtensilsCrossed, title: "Cook Now", sub: "AI-powered recipes", to: "/cook", gradient: "from-amber-500/6 to-orange-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(245,158,11,0.1)]" },
+  { icon: CalendarDays, title: "Meal Plan", sub: "This week's plan ready", to: "/meal-plan", gradient: "from-purple-500/6 to-pink-500/6", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.1)]" },
 ];
 
 export default function Dashboard() {
@@ -102,25 +102,26 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="px-4 py-5 lg:px-10 lg:py-8 max-w-5xl mx-auto relative">
+      <div className="px-5 py-6 lg:px-12 lg:py-10 max-w-6xl mx-auto relative">
+        {/* Subtle background blob */}
         <motion.div
           animate={{ opacity: [0.01, 0.03, 0.01], scale: [1, 1.1, 1] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary rounded-full blur-[150px] pointer-events-none"
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary rounded-full blur-[150px] pointer-events-none"
         />
 
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-5 lg:space-y-8 relative z-10">
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-7 lg:space-y-10 relative z-10">
           {/* Greeting */}
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl lg:text-2xl font-display font-bold text-foreground tracking-tight">{greeting}, Ahmed</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">Let's check your nutrition today</p>
+              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground tracking-tight">{greeting}, Ahmed</h1>
+              <p className="text-sm text-muted-foreground mt-1">Let's check your nutrition today</p>
             </div>
             <Link to="/profile">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-primary to-sky-400 flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg shadow-primary/15"
+                className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary to-teal-400 flex items-center justify-center text-base font-bold text-foreground shadow-lg shadow-primary/15"
               >
                 A
               </motion.div>
@@ -128,62 +129,62 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Progress */}
-          <motion.div variants={fadeUp} className="glass-card-static p-4 lg:p-6">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Today's Progress</h2>
-            <div className="lg:flex lg:items-center lg:gap-8">
+          <motion.div variants={fadeUp} className="glass-card-static p-6 lg:p-8">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-5">Today's Progress</h2>
+            <div className="lg:flex lg:items-center lg:gap-10">
               <div className="flex flex-col items-center lg:shrink-0">
                 <div className="relative">
                   <AnimatedRing percent={1120 / 1800} />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl lg:text-4xl font-bold text-foreground stat-number"><CountUp target={1120} /></span>
-                    <span className="text-xs text-muted-foreground mt-0.5">/ 1,800 cal</span>
+                    <span className="text-4xl lg:text-5xl font-bold text-foreground stat-number"><CountUp target={1120} /></span>
+                    <span className="text-sm text-muted-foreground mt-1">/ 1,800 cal</span>
                   </div>
                 </div>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-sm text-primary font-semibold mt-3">
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-base text-primary font-semibold mt-4">
                   680 remaining
                 </motion.p>
               </div>
-              <div className="flex-1 space-y-3 mt-4 lg:mt-0">
+              <div className="flex-1 space-y-4 mt-6 lg:mt-0">
                 <MacroBar label="Protein" icon={Dumbbell} current={78} target={90} color="bg-primary" />
-                <MacroBar label="Carbs" icon={Sparkles} current={145} target={200} color="bg-sky-400" />
+                <MacroBar label="Carbs" icon={Sparkles} current={145} target={200} color="bg-teal-400" />
                 <MacroBar label="Fat" icon={Droplets} current={42} target={60} color="bg-cyan-400" />
               </div>
             </div>
           </motion.div>
 
           {/* Today's Meals */}
-          <motion.div variants={fadeUp} className="space-y-3">
+          <motion.div variants={fadeUp} className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-display font-semibold text-foreground">Today's Meals</h2>
-              <button onClick={() => navigate("/cook")} className="btn-ghost text-xs flex items-center gap-1"><Plus size={14} /> Add</button>
+              <h2 className="text-lg font-display font-semibold text-foreground">Today's Meals</h2>
+              <button onClick={() => navigate("/cook")} className="btn-ghost text-sm flex items-center gap-1.5"><Plus size={16} /> Add</button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {todayMeals.map((m, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.06, duration: 0.4 }}
+                  transition={{ delay: 0.2 + i * 0.08, duration: 0.4 }}
                   whileHover={{ y: -2 }}
-                  className="glass-card flex items-center gap-3 py-3 px-3"
+                  className="glass-card flex items-center gap-4 py-4 px-5"
                 >
                   <div className="icon-box-sm">
                     {m.status === "pending" ? (
-                      <Clock size={14} className="text-muted-foreground" strokeWidth={1.5} />
+                      <Clock size={20} className="text-muted-foreground" strokeWidth={1.5} />
                     ) : (
-                      <UtensilsCrossed size={14} className="text-primary" strokeWidth={1.5} />
+                      <UtensilsCrossed size={20} className="text-primary" strokeWidth={1.5} />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-foreground truncate">{m.name}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                    <p className="text-sm font-semibold text-foreground truncate">{m.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {m.time} {m.cal > 0 && `· ${m.cal} cal · ${m.protein}g protein`}
                     </p>
                   </div>
                   {m.status === "cooked" && m.stars && (
                     <div className="flex gap-0.5">
                       {Array.from({ length: m.stars }).map((_, j) => (
-                        <Star key={j} size={10} className="fill-amber-400 text-amber-400" />
+                        <Star key={j} size={12} className="fill-amber-400 text-amber-400" />
                       ))}
                     </div>
                   )}
@@ -191,13 +192,13 @@ export default function Dashboard() {
                     <motion.button
                       whileTap={{ scale: 0.9 }}
                       onClick={() => openFeedback(m.name)}
-                      className="chip text-[10px] py-1 px-2 flex items-center gap-1"
+                      className="chip text-xs py-2 px-3 flex items-center gap-1"
                     >
-                      <MessageSquare size={10} /> Feedback
+                      <MessageSquare size={12} /> Feedback
                     </motion.button>
                   )}
                   {m.status === "pending" && (
-                    <button onClick={() => navigate("/cook")} className="chip text-[10px] py-1 px-2">+ Plan</button>
+                    <button onClick={() => navigate("/cook")} className="chip text-xs py-2 px-4">+ Plan</button>
                   )}
                 </motion.div>
               ))}
@@ -205,22 +206,22 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Quick Actions */}
-          <motion.div variants={fadeUp} className="space-y-3">
-            <h2 className="text-base font-display font-semibold text-foreground">Quick Actions</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <motion.div variants={fadeUp} className="space-y-4">
+            <h2 className="text-lg font-display font-semibold text-foreground">Quick Actions</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {quickActions.map((a, i) => (
                 <motion.button
                   key={i}
-                  whileHover={{ scale: 1.03, y: -3 }}
+                  whileHover={{ scale: 1.03, y: -4 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(a.to)}
-                  className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-2 p-3.5 lg:p-5`}
+                  className={`group glass-card text-left bg-gradient-to-br ${a.gradient} space-y-3 p-5 lg:p-6 ${a.glow} transition-shadow duration-500`}
                 >
-                  <div className="icon-box">
-                    <a.icon size={16} className="text-primary" strokeWidth={1.5} />
-                  </div>
-                  <p className="text-sm font-bold text-foreground">{a.title}</p>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">{a.sub}</p>
+                  <motion.div whileHover={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 0.5 }} className="icon-box">
+                    <a.icon size={22} className="text-primary" strokeWidth={1.5} />
+                  </motion.div>
+                  <p className="text-base font-bold text-foreground">{a.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{a.sub}</p>
                 </motion.button>
               ))}
             </div>
@@ -230,21 +231,21 @@ export default function Dashboard() {
           <motion.div variants={fadeUp}>
             <motion.div
               whileHover={{ y: -2 }}
-              className="glass-card-static bg-gradient-to-r from-primary/[0.03] to-secondary/[0.02] flex items-start gap-3 p-4 lg:p-5"
+              className="glass-card-static bg-gradient-to-r from-primary/[0.03] to-secondary/[0.02] flex items-start gap-4 p-5 lg:p-6"
             >
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 className="icon-box"
               >
-                <BrainCircuit className="text-primary" size={16} strokeWidth={1.5} />
+                <BrainCircuit className="text-primary" size={20} strokeWidth={1.5} />
               </motion.div>
               <div className="flex-1">
-                <p className="text-xs lg:text-sm text-foreground leading-relaxed">
+                <p className="text-sm lg:text-base text-foreground leading-relaxed">
                   Your tomatoes and spinach expire tomorrow! Make Palak tonight — it uses both and fits your calorie budget perfectly.
                 </p>
-                <button onClick={() => navigate("/cook")} className="btn-ghost text-xs mt-2 flex items-center gap-1 p-0">
-                  Show Recipe <ChevronRight size={14} />
+                <button onClick={() => navigate("/cook")} className="btn-ghost text-sm mt-3 flex items-center gap-1.5 p-0">
+                  Show Recipe <ChevronRight size={16} />
                 </button>
               </div>
             </motion.div>
