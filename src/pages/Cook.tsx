@@ -261,16 +261,14 @@ export default function Cook() {
                     <UtensilsCrossed size={16} className="text-primary" strokeWidth={1.5} />
                     Meal Type
                   </label>
-                  <div className="grid grid-cols-4 gap-0 rounded-xl overflow-hidden border border-border">
+                  <div className="flex flex-wrap gap-2.5">
                     {mealTypes.map((type) => (
                       <motion.button
                         key={type}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.93 }}
                         onClick={() => setSelectedMealType(type)}
-                        className={`py-3 text-sm font-medium transition-all border-r border-border last:border-r-0 ${
-                          selectedMealType === type
-                            ? "bg-primary/20 text-primary"
-                            : "bg-card/40 text-muted-foreground hover:bg-card/80"
+                        className={`chip text-sm py-2.5 px-5 ${
+                          selectedMealType === type ? "chip-selected" : ""
                         }`}
                       >
                         {type}
