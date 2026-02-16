@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft, Camera, Plus, Search, Warehouse, Egg, Milk, Beef, Apple, Carrot,
-  Wheat, Package, MoreVertical, Pencil, Trash2, X, Check, ImagePlus, Upload
+  Wheat, Package, MoreVertical, Pencil, Trash2, X, Check, ImagePlus, Upload,
+  ScanLine, BarChart3, BrainCircuit, Sparkles
 } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import {
@@ -12,6 +13,13 @@ import {
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } } };
+
+const scanLoadingMessages = [
+  { icon: ScanLine, text: "Scanning your groceries..." },
+  { icon: BarChart3, text: "Identifying items..." },
+  { icon: BrainCircuit, text: "Matching to categories..." },
+  { icon: Sparkles, text: "Almost ready..." },
+];
 
 type FoodItem = {
   id: string;
@@ -72,8 +80,9 @@ export default function FoodStore() {
 
   // Scan flow
   const [scanOpen, setScanOpen] = useState(false);
-  const [scanPhase, setScanPhase] = useState<"upload" | "review">("upload");
+  const [scanPhase, setScanPhase] = useState<"upload" | "scanning" | "review">("upload");
   const [scannedItems, setScannedItems] = useState<ScannedItem[]>([]);
+  const [scanLoadingIdx, setScanLoadingIdx] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const filtered = items.filter(i => i.name.toLowerCase().includes(search.toLowerCase()));
@@ -110,14 +119,27 @@ export default function FoodStore() {
   };
 
   const handleScanFile = () => {
-    // Simulate scanned items
-    const mock: ScannedItem[] = [
-      { name: "Bananas", qty: "×6", category: "fruits_veg" },
-      { name: "Cream", qty: "200ml", category: "dairy" },
-      { name: "Pasta", qty: "500g", category: "pantry" },
-    ];
-    setScannedItems(mock);
-    setScanPhase("review");
+    // Start scanning animation
+    setScanPhase("scanning");
+    setScanLoadingIdx(0);
+    const interval = setInterval(() => {
+      setScanLoadingIdx(prev => {
+        if (prev >= scanLoadingMessages.length - 1) {
+          clearInterval(interval);
+          setTimeout(() => {
+            const mock: ScannedItem[] = [
+              { name: "Bananas", qty: "×6", category: "fruits_veg" },
+              { name: "Cream", qty: "200ml", category: "dairy" },
+              { name: "Pasta", qty: "500g", category: "pantry" },
+            ];
+            setScannedItems(mock);
+            setScanPhase("review");
+          }, 600);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 800);
   };
 
   const confirmScan = () => {
@@ -282,28 +304,51 @@ export default function FoodStore() {
       <Dialog open={scanOpen} onOpenChange={(v) => { setScanOpen(v); if (!v) { setScanPhase("upload"); setScannedItems([]); } }}>
         <DialogContent className="bg-card border-border rounded-2xl max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-foreground">{scanPhase === "upload" ? "Scan Your Items" : "Review Scanned Items"}</DialogTitle>
-            <DialogDescription>{scanPhase === "upload" ? "Take a photo or upload an image of your groceries." : "Edit quantities and confirm the items."}</DialogDescription>
+            <DialogTitle className="text-foreground">
+              {scanPhase === "upload" ? "Scan Your Items" : scanPhase === "scanning" ? "Scanning..." : "Review Scanned Items"}
+            </DialogTitle>
+            <DialogDescription>
+              {scanPhase === "upload" ? "Take a photo or upload an image of your groceries." : scanPhase === "scanning" ? "Analyzing your image..." : "Edit quantities and confirm the items."}
+            </DialogDescription>
           </DialogHeader>
 
-          {scanPhase === "upload" ? (
-            <div className="space-y-4 pt-2">
-              <input type="file" ref={fileRef} accept="image/*" capture="environment" className="hidden" onChange={handleScanFile} />
-              <div className="grid grid-cols-2 gap-3">
-                <motion.button whileTap={{ scale: 0.95 }} onClick={() => fileRef.current?.click()}
-                  className="glass-card flex flex-col items-center gap-3 py-8 cursor-pointer">
-                  <div className="icon-box"><Camera size={24} className="text-primary" strokeWidth={1.5} /></div>
-                  <span className="text-sm font-medium text-foreground">Capture</span>
-                </motion.button>
-                <motion.button whileTap={{ scale: 0.95 }} onClick={() => { fileRef.current?.removeAttribute("capture"); fileRef.current?.click(); }}
-                  className="glass-card flex flex-col items-center gap-3 py-8 cursor-pointer">
-                  <div className="icon-box"><Upload size={24} className="text-primary" strokeWidth={1.5} /></div>
-                  <span className="text-sm font-medium text-foreground">Upload</span>
-                </motion.button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4 pt-2">
+          <AnimatePresence mode="wait">
+            {scanPhase === "upload" && (
+              <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4 pt-2">
+                <input type="file" ref={fileRef} accept="image/*" capture="environment" className="hidden" onChange={handleScanFile} />
+                <div className="grid grid-cols-2 gap-3">
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={() => fileRef.current?.click()}
+                    className="glass-card flex flex-col items-center gap-3 py-8 cursor-pointer">
+                    <div className="icon-box"><Camera size={24} className="text-primary" strokeWidth={1.5} /></div>
+                    <span className="text-sm font-medium text-foreground">Capture</span>
+                  </motion.button>
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={() => { fileRef.current?.removeAttribute("capture"); fileRef.current?.click(); }}
+                    className="glass-card flex flex-col items-center gap-3 py-8 cursor-pointer">
+                    <div className="icon-box"><Upload size={24} className="text-primary" strokeWidth={1.5} /></div>
+                    <span className="text-sm font-medium text-foreground">Upload</span>
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+
+            {scanPhase === "scanning" && (
+              <motion.div key="scanning" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6 text-center py-10">
+                <div className="relative w-36 h-36 mx-auto rounded-2xl overflow-hidden glass-card-static flex items-center justify-center">
+                  <ScanLine size={48} className="text-muted-foreground/20" strokeWidth={1} />
+                  <div className="absolute inset-0 border-2 border-primary/30 rounded-2xl animate-pulse" />
+                  <div className="absolute left-0 right-0 h-0.5 bg-primary/80 animate-scan" />
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div key={scanLoadingIdx} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                    {(() => { const Ic = scanLoadingMessages[scanLoadingIdx].icon; return <Ic size={16} className="text-primary" strokeWidth={1.5} />; })()}
+                    {scanLoadingMessages[scanLoadingIdx].text}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {scanPhase === "review" && (
+              <motion.div key="review" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 pt-2">
               {scannedItems.map((si, idx) => (
                 <div key={idx} className="glass-card-static flex items-center gap-3 p-3">
                   <div className="icon-box-sm shrink-0">
@@ -329,8 +374,9 @@ export default function FoodStore() {
                 className="btn-primary py-2.5 px-6 text-sm flex items-center gap-2 w-full justify-center">
                 <Check size={16} /> Confirm & Add All
               </motion.button>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </DialogContent>
       </Dialog>
     </AppLayout>
